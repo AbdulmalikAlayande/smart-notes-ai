@@ -30,3 +30,4 @@ public class NoteRequest {
 	String folderId;
 	List<String> tags;
 }
+
