@@ -1,0 +1,20 @@
+package app.bola.smartnotesai.note.service;
+
+import app.bola.smartnotesai.common.service.BaseService;
+import app.bola.smartnotesai.note.data.dto.NoteRequest;
+import app.bola.smartnotesai.note.data.dto.NoteResponse;
+import app.bola.smartnotesai.note.data.model.Note;
+
+import java.util.List;
+import java.util.Set;
+
+public interface NoteService extends BaseService<NoteRequest, Note, NoteResponse> {
+	
+	Set<NoteResponse> findAllByOwnerId(String ownerId);
+	
+	Set<NoteResponse> findAllByFolderId(String publicId);
+	
+	NoteResponse changeParentFolder(String publicId, String folderId);
+	
+	List<String> addNewTag(String publicId, String tag);
+}
