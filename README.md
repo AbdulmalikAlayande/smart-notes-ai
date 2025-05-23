@@ -91,14 +91,129 @@ mvn spring-boot:run
 The backend exposes a RESTful API for user authentication, folder and note management, and AI-powered endpoints.
 
 <details>
-<summary><strong>🔐 Authentication</strong></summary>
+   <summary>
+      <strong>🔐 Authentication</strong>
+   </summary>
+   
+   ### Register  
+   **POST** `/api/auth/register`
+   
+   ```json
+   {
+     "username": "string",
+     "password": "string"
+   }
+   ```
+   
+   ### Login
+   **POST** `/api/auth/login`
+   
+   ```json
+   {
+     "username": "string",
+     "password": "string"
+   }
+   ```
+   Response:
+   
+   ```json
+   {
+     "token": "string"
+   }
+   ```
+</details> 
 
-### Register  
-**POST** `/api/auth/register`
+<details> 
+   <summary>
+      <strong>📁 Folder Management</strong>
+   </summary>
+   
+   ### Create Folder
+   **POST** `/api/folders`
+   
+   ```json
+   {
+     "name": "string"
+   }
+   ```
 
-```json
+   Get All Folders
+   **GET** `/api/folders`
+   
+   Response:
+   
+   json
+   Copy
+   Edit
+   [
+     {
+       "id": 1,
+       "name": "Work Notes"
+     }
+   ]
+   Update Folder
+   PUT /api/folders/{id}
+   
+   Delete Folder
+   DELETE /api/folders/{id}
+   
+   </details> <details> <summary><strong>📝 Note Management</strong></summary>
+   Create Note
+   POST /api/notes
+   
+   json
+   Copy
+   Edit
+   {
+     "title": "string",
+     "content": "string",
+     "folderId": 1
+   }
+   Get All Notes
+   GET /api/notes
+   
+   Update Note
+   PUT /api/notes/{id}
+   
+   Delete Note
+   DELETE /api/notes/{id}
+
+</details>
+
+<details> <summary><strong>🧠 AI Features</strong></summary>
+Summarize Note
+POST /api/ai/summarize
+
+json
+Copy
+Edit
 {
-  "username": "string",
-  "password": "string"
+  "content": "Your full note content here"
 }
+Response:
 
+json
+Copy
+Edit
+{
+  "summary": "A brief summary...",
+  "keyPoints": ["Point 1", "Point 2"]
+}
+Generate Tags
+POST /api/ai/tags
+
+json
+Copy
+Edit
+{
+  "content": "Note content for tagging"
+}
+Response:
+
+json
+Copy
+Edit
+{
+  "tags": ["Tag1", "Tag2", "Tag3"]
+}
+</details> ```
