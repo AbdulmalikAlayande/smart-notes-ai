@@ -1,13 +1,12 @@
 package app.bola.smartnotesai.ai.service;
 
 import app.bola.smartnotesai.ai.dto.NoteSummarizerResponse;
+import app.bola.smartnotesai.ai.service.llm.resilience.ResilientLlmService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
-//import org.springframework.core.io.Resource;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
@@ -19,19 +18,19 @@ import java.util.concurrent.CompletableFuture;
 @Component
 public class NoteSummarizer {
 
-	final ChatClient chatClient;
 	final PromptTemplate summarizePrompt;
+	final ResilientLlmService llmService;
 	private static final int MAX_CHARS = 10000;
 	
-	public NoteSummarizer(ChatClient chatClient,
+	public NoteSummarizer(ResilientLlmService llmService,
 	                      @Value("prompts/summarize-note.st")
 	                      ClassPathResource summarizePromptResource) {
 		
-		this.chatClient = chatClient;
+		this.llmService = llmService;
 		this.summarizePrompt = new PromptTemplate(summarizePromptResource);
 	}
 	
-	@Async
+	@Async(value = "taskExecutor")
 	public CompletableFuture<NoteSummarizerResponse> generateSummaryAsync(String noteContent){
 		return CompletableFuture.supplyAsync(() -> generateSummary(noteContent));
 	}
@@ -40,14 +39,14 @@ public class NoteSummarizer {
 		String processedNote = truncateIfNeeded(noteContent);
 		try {
 			Prompt prompt = summarizePrompt.create(Map.of("note", processedNote));
-			NoteSummarizerResponse summarizedNote = chatClient.prompt(prompt)
-					                                .call()
-					                                .entity(NoteSummarizerResponse.class);
+			log.info("Prompt Content: {}", prompt.getContents());
+			
+			NoteSummarizerResponse summarizedNote = llmService.generate(prompt.getContents(), NoteSummarizerResponse.class);
 			log.info("Summarized note: {}", summarizedNote);
+			
 			return summarizedNote;
 		} catch (Exception exception) {
 			log.error("Failed to summarize note {}", String.valueOf(exception));
-			exception.printStackTrace();
 			return createFallbackResponse();
 		}
 		
