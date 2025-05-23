@@ -1,82 +1,86 @@
-# SmartNotesAI
+# 🧠 SmartNotesAI
 
-SmartNotesAI is a fast, practical web application that enables users to take notes, organize them into folders, and leverage AI-powered features such as automatic tagging and summarization. The backend is built with Java, Spring Boot, and integrates with multiple LLM providers (OpenAI, Anthropic, Ollama, Grok, DeepSeek) for advanced note intelligence.
-
----
-
-## Features
-
-- **User Authentication:** Secure registration and login for users.
-- **Folder Management:** Create, update, and delete folders to organize notes.
-- **Note Management:** Create, edit, delete, and view notes within folders.
-- **AI-Powered Summarization:** Generate concise summaries and key points for notes using LLMs.
-- **AI Tag Generation:** Automatically suggest relevant tags for notes.
-- **Multi-Provider LLM Support:** Switch between OpenAI, Anthropic, Ollama, Grok, and DeepSeek for AI features.
-- **Provider Health Tracking:** Monitors and selects healthy AI providers for resilience.
-- **Asynchronous Processing:** Fast, non-blocking AI operations for a smooth user experience.
-- **RESTful API:** Clean, well-structured endpoints for all operations.
+SmartNotesAI is a fast and intelligent web application that helps users take notes, organize them into folders, and utilize powerful AI features like automatic **summarization** and **tag generation**. It supports multiple LLM providers such as **OpenAI**, **Anthropic**, **Ollama**, **Grok**, and **DeepSeek** for enhanced flexibility and resilience.
 
 ---
 
-## How It Works
+## 🚀 Features
 
-1. **User Flow:**
-   - Register or log in.
-   - Create folders to organize notes.
-   - Add notes to folders.
-   - On note creation or update, the system can:
-     - Summarize the note content.
-     - Suggest tags using AI.
-   - Users can view, edit, or delete notes and folders.
-
-2. **AI Integration:**
-   - When a note is created/updated, the backend sends the content to the selected LLM provider.
-   - The provider returns a summary, key points, and tags.
-   - Results are stored and displayed to the user.
-
-3. **Provider Selection:**
-   - The system can dynamically select from available LLM providers based on health and configuration.
+- 🔐 **User Authentication**: Secure registration and login system.
+- 📁 **Folder Management**: Create, update, and delete folders for organizing notes.
+- 📝 **Note Management**: Full CRUD operations for notes.
+- 🧠 **AI-Powered Summarization**: Generate concise summaries and key points from note content.
+- 🏷️ **AI Tag Generation**: Suggest relevant tags for notes using LLMs.
+- 🌐 **Multi-Provider LLM Support**: Easily switch between supported AI providers.
+- ✅ **Provider Health Tracking**: Selects and monitors healthy LLMs dynamically.
+- ⚙️ **Asynchronous Processing**: Fast, non-blocking AI requests.
+- 🔗 **RESTful API**: Clean and consistent API structure.
 
 ---
 
-## Tech Stack
+## ⚙️ How It Works
 
-- **Backend:** Java, Spring Boot, Maven
-- **AI Integration:** Spring AI, OpenAI, Anthropic, Ollama, Grok, DeepSeek
-- **Database:** SQL (configurable)
-- **API:** RESTful endpoints
-- **Build Tool:** Maven
+### 1. User Flow
+
+1. Register or log in.
+2. Create folders to categorize notes.
+3. Add or update notes.
+4. When saving, the backend:
+   - Generates a summary and key points.
+   - Suggests relevant tags using AI.
+5. View, edit, or delete notes and folders as needed.
+
+### 2. AI Integration
+
+- Upon note creation or update, the note content is sent to the selected LLM provider.
+- The LLM returns a **summary**, **key points**, and **tags**.
+- These results are saved and served back to the user.
+
+### 3. LLM Provider Selection
+
+- The system supports multiple LLMs and intelligently selects a healthy one based on availability and performance.
 
 ---
 
-## Getting Started
+## 🛠️ Tech Stack
+
+| Layer       | Technology |
+|-------------|------------|
+| **Backend** | Java, Spring Boot, Maven |
+| **AI**      | Spring AI, OpenAI, Anthropic, Ollama, Grok, DeepSeek |
+| **Database**| SQL (PostgreSQL, MySQL, etc.) |
+| **API**     | RESTful JSON endpoints |
+| **Build**   | Maven |
+
+---
+
+## 🧰 Getting Started
 
 ### Prerequisites
 
 - Java 17+
 - Maven 3.8+
-- (Optional) Docker (for Ollama or local LLMs)
-- API keys for OpenAI, Anthropic, Grok and DeepSeek.
+- Docker (for Ollama or local LLMs, optional)
+- API keys for:
+  - OpenAI
+  - Anthropic
+  - Grok
+  - DeepSeek
 
-### Setup
+### 🔧 Setup Instructions
 
-1. **Clone the repository:**
-   ```sh
-   git clone https://github.com/yourusername/smartnotesai.git
-   cd smartnotesai
+```bash
+# 1. Clone the repository
+git clone https://github.com/yourusername/smartnotesai.git
+cd smartnotesai
 
+# 2. Configure environment
+cp src/main/resources/application.example.yml src/main/resources/application.yml
+# Edit the file with your DB and API credentials
 
-# API Documentation: The SmartNotesAI application provides a RESTful API for managing users, folders, notes, and AI-powered features like summarization and tag generation.
+# 3. Build the application
+mvn clean install
 
-## Authentication
-
-### Register
-**POST** `/api/auth/register`  
-Registers a new user.
-
-**Request Body:**
-```json
-{
-  "username": "string",
-  "password": "string"
-}
+# 4. Run the application
+mvn spring-boot:run
+# The server will start at http://localhost:8080
