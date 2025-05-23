@@ -104,7 +104,14 @@ The backend exposes a RESTful API for user authentication, folder and note manag
      "password": "string"
    }
    ```
+   Response:
    
+   ```json
+   {
+      
+   }
+   ```
+
    ### Login
    **POST** `/api/auth/login`
    
@@ -136,29 +143,54 @@ The backend exposes a RESTful API for user authentication, folder and note manag
      "name": "string"
    }
    ```
+   Response:
+   
+   ```json
+   {
+      
+   }
+   ```
 
-   Get All Folders
+   ## Get All Folders
    **GET** `/api/folders`
    
    Response:
    
-   json
-   Copy
-   Edit
+   ```json
    [
      {
        "id": 1,
        "name": "Work Notes"
      }
    ]
-   Update Folder
-   PUT /api/folders/{id}
+   ```
+
+   ### Update Folder
+   **PUT** `/api/folders/{public-id}`
+
+   Response: 
+   ```json
+   {
+      
+   }
+   ```
+
+   ### Delete Folder
+   **DELETE** `/api/folders/{id}`
+
+   Response: 
+   ```json
+   {
+      
+   }
+   ```
+</details> 
+<details> 
+   <summary>
+      <strong>📝 Note Management</strong>
+   </summary>
    
-   Delete Folder
-   DELETE /api/folders/{id}
-   
-   </details> <details> <summary><strong>📝 Note Management</strong></summary>
-   Create Note
+   ### Create Note
    POST /api/notes
    
    json
