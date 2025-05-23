@@ -84,3 +84,21 @@ mvn clean install
 # 4. Run the application
 mvn spring-boot:run
 # The server will start at http://localhost:8080
+```
+
+## 📖 API Documentation
+
+The backend exposes a RESTful API for user authentication, folder and note management, and AI-powered endpoints.
+
+<details>
+<summary><strong>🔐 Authentication</strong></summary>
+
+### Register  
+**POST** `/api/auth/register`
+
+```json
+{
+  "username": "string",
+  "password": "string"
+}
+
