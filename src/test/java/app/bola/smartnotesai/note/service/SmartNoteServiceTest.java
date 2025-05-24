@@ -11,6 +11,7 @@ import app.bola.smartnotesai.note.data.dto.NoteRequest;
 import app.bola.smartnotesai.note.data.dto.NoteResponse;
 import app.bola.smartnotesai.note.data.dto.NoteUpdateRequest;
 import jakarta.persistence.EntityNotFoundException;
+import lombok.SneakyThrows;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -389,13 +390,12 @@ class SmartNoteServiceTest {
 	@DisplayName("AI Feature Tests")
 	class AIFeatureTests {
 		
-		private NoteResponse createdNote;
-		
 		@BeforeEach
 		public void setUp() {
 		
 		}
 		
+		@SneakyThrows
 		@Test
 		@DisplayName("Should generate summary for note on creation")
 		public void generateSummaryOnNoteCreationTest() {
@@ -430,9 +430,27 @@ class SmartNoteServiceTest {
 			NoteResponse response = smartNoteService.create(contentRequest);
 			
 			assertNotNull(response);
-			assertNotNull(response.getTags());
-			assertFalse(response.getTags().isEmpty());
-			assertTrue(response.getTags().contains("programming ai"));
+			assertNotNull(response.getPublicId());
+			
+			Thread.sleep(15000);
+			
+			NoteResponse updatedNote = smartNoteService.findByPublicId(response.getPublicId());
+			
+			assertNotNull(updatedNote);
+			assertNotNull(updatedNote.getTags());
+			assertFalse(updatedNote.getTags().isEmpty());
+			assertNotNull(updatedNote.getSummary());
+			assertFalse(updatedNote.getSummary().isEmpty());
+			
+			// Check if tags contain relevant AI-related content
+			boolean hasRelevantTags = updatedNote.getTags().stream()
+					                          .anyMatch(tag -> tag.toLowerCase().contains("ai") ||
+							                                           tag.toLowerCase().contains("artificial") ||
+							                                           tag.toLowerCase().contains("intelligence") ||
+							                                           tag.toLowerCase().contains("technology") ||
+							                                           tag.toLowerCase().contains("programming"));
+			
+			assertTrue(hasRelevantTags, "Expected tags to contain AI-related content");
 		}
 		
 		

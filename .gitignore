@@ -6,6 +6,12 @@ target/
 
 src/main/resources/secret.properties
 
+/smartnotes-secrets.ps1
+/smartnotes-secrets.bat
+
+smartnotes-secrets.ps1
+smartnotes-secrets.bat
+
 ### STS ###
 .apt_generated
 .classpath

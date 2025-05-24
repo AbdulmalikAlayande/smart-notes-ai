@@ -17,6 +17,7 @@ import java.util.StringJoiner;
 public class NoteSummarizerResponse {
 	
 	private String summary;
+	private String sentiment;
 	private List<String> keyPoints;
 	private List<String> tags;
 	

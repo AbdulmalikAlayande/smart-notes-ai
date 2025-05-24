@@ -21,7 +21,6 @@ public class ResilientLlmService {
 		this.providers = providers;
 		this.healthTracker = healthTracker;
 		this.retryRegistry = retryRegistry;
-		
 	}
 	
 	public String generate(String prompt) {
@@ -36,24 +35,41 @@ public class ResilientLlmService {
 			healthyProviders = providers;
 		}
 		
+		Exception lastException = null;
+		
+		// Try each provider in order
 		for (LLMProvider provider : healthyProviders) {
-			Retry retry = retryRegistry.retry(provider.getName());
+			log.info("Attempting to use provider: {}", provider.getName());
+			
 			try {
+				Retry retry = retryRegistry.retry(provider.getName());
 				T response = executeWithRetry(retry, () -> provider.generate(contents, responseType));
-				healthTracker.recordSuccess(provider.getName());
+				
 				log.info("Successfully generated result using provider: {}", provider.getName());
+				healthTracker.recordSuccess(provider.getName());
 				return response;
+				
 			} catch (Exception e) {
-				log.warn("Failed to generate completion using provider: {}", provider.getName(), e);
+				lastException = e;
+				log.warn("Failed to generate completion using provider: {} - {}",
+						provider.getName(), e.getMessage());
 				healthTracker.recordFailure(provider.getName());
+				
+				// Continue to next provider instead of breaking
+				log.info("Trying next provider...");
 			}
 		}
-		log.error("All providers failed to generate completion");
-		throw new RuntimeException("All providers failed to generate a response");
+		
+		// If we get here, all providers failed
+		log.error("All {} providers failed to generate completion", healthyProviders.size());
+		if (lastException != null) {
+			throw new RuntimeException("All providers failed to generate a response. Last error: " + lastException.getMessage(), lastException);
+		} else {
+			throw new RuntimeException("All providers failed to generate a response");
+		}
 	}
 	
 	private <T> T executeWithRetry(Retry retry, Callable<T> supplier) throws Exception {
 		return retry.executeCallable(supplier);
 	}
 }
-

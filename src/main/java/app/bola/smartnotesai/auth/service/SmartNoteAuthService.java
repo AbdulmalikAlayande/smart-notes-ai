@@ -21,7 +21,6 @@ public class SmartNoteAuthService implements AuthService {
     @Override
     public UserResponse create(UserRequest userRequest) {
         User user = modelMapper.map(userRequest, User.class);
-        log.info("{}", user);
         User savedEntity = userRepository.save(user);
         return modelMapper.map(savedEntity, UserResponse.class);
     }

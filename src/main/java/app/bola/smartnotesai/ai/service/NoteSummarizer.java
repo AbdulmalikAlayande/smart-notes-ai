@@ -39,11 +39,8 @@ public class NoteSummarizer {
 		String processedNote = truncateIfNeeded(noteContent);
 		try {
 			Prompt prompt = summarizePrompt.create(Map.of("note", processedNote));
-			log.info("Prompt Content: {}", prompt.getContents());
-			
 			NoteSummarizerResponse summarizedNote = llmService.generate(prompt.getContents(), NoteSummarizerResponse.class);
 			log.info("Summarized note: {}", summarizedNote);
-			
 			return summarizedNote;
 		} catch (Exception exception) {
 			log.error("Failed to summarize note {}", String.valueOf(exception));
