@@ -1,6 +1,6 @@
-package app.bola.smartnotesai.auth.data.dto;
+package app.bola.smartnotesai.user.data.dto;
 
-import app.bola.smartnotesai.auth.data.model.User;
+import app.bola.smartnotesai.user.data.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -24,7 +24,6 @@ public class UserResponse {
     private String publicId;
     private String email;
     private String username;
-    private String password;
     private LocalDateTime createdAt;
     private LocalDateTime lastModifiedAt;
 

@@ -1,9 +1,9 @@
 package app.bola.smartnotesai.note.service;
 
-import app.bola.smartnotesai.auth.data.dto.UserRequest;
-import app.bola.smartnotesai.auth.data.dto.UserResponse;
-import app.bola.smartnotesai.auth.service.AuthService;
-import app.bola.smartnotesai.auth.service.UserService;
+import app.bola.smartnotesai.user.data.dto.UserRequest;
+import app.bola.smartnotesai.user.data.dto.UserResponse;
+import app.bola.smartnotesai.security.services.AuthService;
+import app.bola.smartnotesai.user.service.UserService;
 import app.bola.smartnotesai.folder.data.dto.FolderRequest;
 import app.bola.smartnotesai.folder.data.dto.FolderResponse;
 import app.bola.smartnotesai.folder.service.FolderService;
@@ -30,7 +30,7 @@ class SmartNoteServiceTest {
 	@Autowired
 	UserService userService;
 	@Autowired
-	NoteService smartNoteService;
+	NoteService noteService;
 	@Autowired
 	FolderService folderService;
 	NoteRequest noteRequest;
@@ -69,7 +69,7 @@ class SmartNoteServiceTest {
 		@Test
 		@DisplayName("Should create a note successfully without folder")
 		public void createNewNoteTest() {
-			NoteResponse response = smartNoteService.create(noteRequest);
+			NoteResponse response = noteService.create(noteRequest);
 			assertNotNull(response);
 			assertThat(response).hasNoNullFieldsOrPropertiesExcept("tags", "summary", "folderId");
 		}
@@ -82,7 +82,7 @@ class SmartNoteServiceTest {
 					                                             .build());
 			noteRequest.setFolderId(folder.getPublicId());
 			
-			NoteResponse response = smartNoteService.create(noteRequest);
+			NoteResponse response = noteService.create(noteRequest);
 			assertNotNull(response);
 			assertThat(response).hasNoNullFieldsOrPropertiesExcept("tags", "summary", "folderId");
 		}
@@ -93,7 +93,7 @@ class SmartNoteServiceTest {
 			noteRequest.setOwnerId(UUID.randomUUID().toString());
 			
 			assertThrows(EntityNotFoundException.class,
-					() -> smartNoteService.create(noteRequest),
+					() -> noteService.create(noteRequest),
 					"User not found");
 		}
 		
@@ -103,7 +103,7 @@ class SmartNoteServiceTest {
 			noteRequest.setFolderId(UUID.randomUUID().toString());
 			
 			assertThrows(EntityNotFoundException.class,
-					() -> smartNoteService.create(noteRequest),
+					() -> noteService.create(noteRequest),
 					"Folder not found");
 		}
 		
@@ -123,13 +123,13 @@ class SmartNoteServiceTest {
 		
 		@BeforeEach
 		void setUp() {
-			createdNote = smartNoteService.create(noteRequest);
+			createdNote = noteService.create(noteRequest);
 		}
 		
 		@Test
 		@DisplayName("Should find a note by public ID")
 		public void findNoteByPublicIdTest() {
-			NoteResponse foundNote = smartNoteService.findByPublicId(createdNote.getPublicId());
+			NoteResponse foundNote = noteService.findByPublicId(createdNote.getPublicId());
 			assertNotNull(foundNote);
 			assertEquals(createdNote.getPublicId(), foundNote.getPublicId());
 			assertEquals(createdNote.getTitle(), foundNote.getTitle());
@@ -142,7 +142,7 @@ class SmartNoteServiceTest {
 			String nonExistentId = UUID.randomUUID().toString();
 			
 			assertThrows(EntityNotFoundException.class,
-					() -> smartNoteService.findByPublicId(nonExistentId),
+					() -> noteService.findByPublicId(nonExistentId),
 					"Note not found");
 		}
 		
@@ -155,9 +155,9 @@ class SmartNoteServiceTest {
 						                      .content("This is my number " + count+1 + " note")
 						                      .ownerId(user.getPublicId())
 						                      .build();
-				smartNoteService.create(request);
+				noteService.create(request);
 			}
-			Set<NoteResponse> notes = smartNoteService.findAllByOwnerId(user.getPublicId());
+			Set<NoteResponse> notes = noteService.findAllByOwnerId(user.getPublicId());
 			
 			assertNotNull(notes);
 			assertThat(notes.size()).isGreaterThanOrEqualTo(5);
@@ -171,7 +171,7 @@ class SmartNoteServiceTest {
 		public void findNotesByNonExistentOwnerTest() {
 			String nonExistentId = UUID.randomUUID().toString();
 			
-			Set<NoteResponse> notes = smartNoteService.findAllByOwnerId(nonExistentId);
+			Set<NoteResponse> notes = noteService.findAllByOwnerId(nonExistentId);
 			
 			assertNotNull(notes);
 			assertThat(notes.size()).isEqualTo(0);
@@ -193,10 +193,10 @@ class SmartNoteServiceTest {
 						                      .ownerId(user.getPublicId())
 						                      .folderId(folder.getPublicId())
 						                      .build();
-				smartNoteService.create(request);
+				noteService.create(request);
 			}
 			
-			Set<NoteResponse> notes = smartNoteService.findAllByFolderId(folder.getPublicId());
+			Set<NoteResponse> notes = noteService.findAllByFolderId(folder.getPublicId());
 			
 			assertNotNull(notes);
 			assertThat(notes.size()).isEqualTo(3);
@@ -210,7 +210,7 @@ class SmartNoteServiceTest {
 		public void findNotesByNonExistentFolderTest() {
 			String nonExistentId = UUID.randomUUID().toString();
 			
-			Set<NoteResponse> notes = smartNoteService.findAllByFolderId(nonExistentId);
+			Set<NoteResponse> notes = noteService.findAllByFolderId(nonExistentId);
 			
 			assertNotNull(notes);
 			assertThat(notes.size()).isEqualTo(0);
@@ -226,7 +226,7 @@ class SmartNoteServiceTest {
 		
 		@BeforeEach
 		public void setUp() {
-			createdNote = smartNoteService.create(noteRequest);
+			createdNote = noteService.create(noteRequest);
 		}
 		
 		@Test
@@ -236,8 +236,9 @@ class SmartNoteServiceTest {
 			NoteUpdateRequest updateRequest = NoteUpdateRequest.builder()
 					                            .title("Updated Title")
 					                            .content("This is the updated content")
-					                            .build();
-			NoteResponse updatedNote = smartNoteService.update(createdNote.getPublicId(), updateRequest);
+			                                    .noteId(createdNote.getPublicId())
+			                                    .build();
+			NoteResponse updatedNote = noteService.update(updateRequest);
 			
 			assertNotNull(updatedNote);
 			assertEquals("Updated Title", updatedNote.getTitle());
@@ -251,9 +252,10 @@ class SmartNoteServiceTest {
 			NoteUpdateRequest updateRequest = NoteUpdateRequest.builder()
 					                            .title("Only Title Updated")
 					                            .content(createdNote.getContent())
+			                                    .noteId(createdNote.getPublicId())
 					                            .build();
 			
-			NoteResponse updatedNote = smartNoteService.update(createdNote.getPublicId(), updateRequest);
+			NoteResponse updatedNote = noteService.update(updateRequest);
 			
 			assertNotNull(updatedNote);
 			assertEquals("Only Title Updated", updatedNote.getTitle());
@@ -266,9 +268,10 @@ class SmartNoteServiceTest {
 			NoteUpdateRequest updateRequest = NoteUpdateRequest.builder()
 					                            .title(createdNote.getTitle())
 					                            .content("Only content updated")
+			                                    .noteId(createdNote.getPublicId())
 					                            .build();
 			
-			NoteResponse updatedNote = smartNoteService.update(createdNote.getPublicId(), updateRequest);
+			NoteResponse updatedNote = noteService.update(updateRequest);
 			
 			assertNotNull(updatedNote);
 			assertEquals(createdNote.getTitle(), updatedNote.getTitle());
@@ -282,9 +285,62 @@ class SmartNoteServiceTest {
 			NoteUpdateRequest updateRequest = NoteUpdateRequest.builder()
 					                            .title("Updated Title")
 					                            .content("Updated content")
+					                            .noteId(nonExistentId)
 					                            .build();
 			
-			assertThrows(EntityNotFoundException.class, () -> smartNoteService.update(nonExistentId, updateRequest));
+			assertThrows(EntityNotFoundException.class, () -> noteService.update(updateRequest));
+		}
+		
+		@Test
+		@DisplayName("Should change the parent folder to another existing folder")
+		public void changeParentFolder(){
+			FolderResponse oldFolder = folderService.create(FolderRequest.builder()
+					                                                .ownerId(user.getPublicId())
+					                                                .name("Old Parent Folder")
+					                                                .build());
+			
+			noteRequest.setFolderId(oldFolder.getPublicId());
+			NoteResponse response = noteService.create(noteRequest);
+			
+			assertThat(response).isNotNull();
+			assertThat(response.getFolderId()).isNotNull();
+			assertThat(response.getFolderId()).isNotEmpty();
+			assertThat(response.getFolderId()).isEqualTo(oldFolder.getPublicId());
+			
+			
+			FolderResponse newFolder = folderService.create(FolderRequest.builder()
+					                                             .name("New Parent Folder")
+					                                             .ownerId(user.getPublicId())
+					                                             .build());
+			assertThat(newFolder).isNotNull();
+			assertThat(newFolder.getPublicId()).isNotEmpty();
+			assertThat(newFolder.getPublicId()).isNotNull();
+			
+			NoteResponse updatedNote = noteService.changeParentFolder(response.getPublicId(), newFolder.getPublicId());
+			assertNotNull(updatedNote);
+			assertThat(updatedNote.getFolderId()).isNotNull();
+			assertThat(updatedNote.getFolderId()).isNotEmpty();
+			assertThat(updatedNote.getFolderId()).isEqualTo(newFolder.getPublicId());
+		}
+		
+		@Test
+		@DisplayName("Should add an existing note without a parent folder to an existing folder")
+		public void addNoteToFolder(){
+			NoteResponse response = noteService.create(noteRequest);
+			assertThat(response).isNotNull();
+			assertThat(response.getFolderId()).isNullOrEmpty();
+			
+			FolderResponse newFolder = folderService.create(FolderRequest.builder()
+					                                                .name("New Parent Folder")
+					                                                .ownerId(user.getPublicId())
+					                                                .build());
+			assertThat(newFolder).isNotNull();
+			assertThat(newFolder.getPublicId()).isNotEmpty();
+			assertThat(newFolder.getPublicId()).isNotNull();
+			
+			response = noteService.addNoteToFolder(response.getPublicId(), newFolder.getPublicId());
+			assertThat(response.getFolderId()).isNotNull();
+			assertThat(response.getFolderId()).isNotEmpty();
 		}
 	}
 	
@@ -308,7 +364,7 @@ class SmartNoteServiceTest {
 					                         .ownerId(user.getPublicId())
 					                         .build();
 			
-			NoteResponse response = smartNoteService.create(request);
+			NoteResponse response = noteService.create(request);
 			
 			assertNotNull(response);
 			assertEquals(request.getTitle(), response.getTitle());
@@ -324,7 +380,7 @@ class SmartNoteServiceTest {
 					                          .ownerId(user.getPublicId())
 					                          .build();
 			
-			NoteResponse response = smartNoteService.create(htmlRequest);
+			NoteResponse response = noteService.create(htmlRequest);
 			
 			assertNotNull(response);
 			assertNotNull(response.getContent());
@@ -335,14 +391,14 @@ class SmartNoteServiceTest {
 		@DisplayName("Should handle create note with null title")
 		public void createNoteWithNullTitleTest() {
 			noteRequest.setTitle(null);
-			assertThrows(Exception.class, () -> smartNoteService.create(noteRequest));
+			assertThrows(Exception.class, () -> noteService.create(noteRequest));
 		}
 		
 		@Test
 		@DisplayName("Should handle create note with null content")
 		public void createNoteWithNullContentTest() {
 			noteRequest.setContent(null);
-			assertThrows(Exception.class, () -> smartNoteService.create(noteRequest));
+			assertThrows(Exception.class, () -> noteService.create(noteRequest));
 		}
 		
 		@Test
@@ -361,7 +417,7 @@ class SmartNoteServiceTest {
 					                           .ownerId(user.getPublicId())
 					                           .build();
 			
-			NoteResponse response = smartNoteService.create(emojiRequest);
+			NoteResponse response = noteService.create(emojiRequest);
 			
 			assertNotNull(response);
 			assertEquals(emojiRequest.getTitle(), response.getTitle());
@@ -378,7 +434,7 @@ class SmartNoteServiceTest {
 					                               .ownerId(user.getPublicId())
 					                               .build();
 			
-			NoteResponse response = smartNoteService.create(multiLangRequest);
+			NoteResponse response = noteService.create(multiLangRequest);
 			
 			assertNotNull(response);
 			assertEquals(multiLangRequest.getContent(), response.getContent());
@@ -389,11 +445,6 @@ class SmartNoteServiceTest {
 	@Nested
 	@DisplayName("AI Feature Tests")
 	class AIFeatureTests {
-		
-		@BeforeEach
-		public void setUp() {
-		
-		}
 		
 		@SneakyThrows
 		@Test
@@ -427,14 +478,14 @@ class SmartNoteServiceTest {
 					                               .ownerId(user.getPublicId())
 					                               .build();
 			
-			NoteResponse response = smartNoteService.create(contentRequest);
+			NoteResponse response = noteService.create(contentRequest);
 			
 			assertNotNull(response);
 			assertNotNull(response.getPublicId());
 			
 			Thread.sleep(15000);
 			
-			NoteResponse updatedNote = smartNoteService.findByPublicId(response.getPublicId());
+			NoteResponse updatedNote = noteService.findByPublicId(response.getPublicId());
 			
 			assertNotNull(updatedNote);
 			assertNotNull(updatedNote.getTags());
@@ -452,7 +503,5 @@ class SmartNoteServiceTest {
 			
 			assertTrue(hasRelevantTags, "Expected tags to contain AI-related content");
 		}
-		
-		
 	}
 }

@@ -1,8 +1,8 @@
-package app.bola.smartnotesai.auth.service;
+package app.bola.smartnotesai.user.service;
 
-import app.bola.smartnotesai.auth.data.dto.UserRequest;
-import app.bola.smartnotesai.auth.data.dto.UserResponse;
-import app.bola.smartnotesai.auth.data.model.User;
+import app.bola.smartnotesai.user.data.dto.UserRequest;
+import app.bola.smartnotesai.user.data.dto.UserResponse;
+import app.bola.smartnotesai.user.data.model.User;
 import app.bola.smartnotesai.common.service.BaseService;
 
 public interface UserService extends BaseService<UserRequest, User, UserResponse> {

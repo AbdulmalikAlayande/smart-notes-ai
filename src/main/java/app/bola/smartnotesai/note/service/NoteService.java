@@ -14,7 +14,9 @@ public interface NoteService extends BaseService<NoteRequest, Note, NoteResponse
 	
 	Set<NoteResponse> findAllByFolderId(String publicId);
 	
-	NoteResponse changeParentFolder(String publicId, String folderId);
+	NoteResponse changeParentFolder(String noteId, String folderId);
 	
 	List<String> addNewTag(String publicId, String tag);
+	
+	NoteResponse addNoteToFolder(String noteId, String folderId);
 }

@@ -1,16 +1,9 @@
-package app.bola.smartnotesai.auth.data.dto;
+package app.bola.smartnotesai.security.dto;
 
-import app.bola.smartnotesai.auth.data.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
-
-import java.io.Serializable;
-
-/**
- * {@link User} Model Request Object
- */
 
 @Getter
 @Setter
@@ -19,10 +12,9 @@ import java.io.Serializable;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UserRequest implements Serializable {
-
-    String email;
-    String username;
-    String password;
-    
+public class LoginResponse {
+	
+	String userId;
+	String refreshToken;
+	String accessToken;
 }

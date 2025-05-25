@@ -1,8 +1,8 @@
 package app.bola.smartnotesai.folder.service;
 
-import app.bola.smartnotesai.auth.data.dto.UserRequest;
-import app.bola.smartnotesai.auth.data.dto.UserResponse;
-import app.bola.smartnotesai.auth.service.UserService;
+import app.bola.smartnotesai.user.data.dto.UserRequest;
+import app.bola.smartnotesai.user.data.dto.UserResponse;
+import app.bola.smartnotesai.user.service.UserService;
 import app.bola.smartnotesai.folder.data.dto.FolderRequest;
 import app.bola.smartnotesai.folder.data.dto.FolderResponse;
 import org.junit.jupiter.api.AfterEach;

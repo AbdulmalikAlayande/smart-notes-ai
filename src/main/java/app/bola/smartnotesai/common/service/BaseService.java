@@ -17,5 +17,5 @@ public interface BaseService<REQ, ENT, RES> {
 		return Collections.emptyList();
 	}
 	
-	RES update(String publicId, Object req);
+	RES update(Object req);
 }

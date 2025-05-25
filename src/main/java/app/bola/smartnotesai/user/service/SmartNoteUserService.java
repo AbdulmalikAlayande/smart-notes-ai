@@ -1,9 +1,10 @@
-package app.bola.smartnotesai.auth.service;
+package app.bola.smartnotesai.user.service;
 
-import app.bola.smartnotesai.auth.data.dto.UserRequest;
-import app.bola.smartnotesai.auth.data.dto.UserResponse;
-import app.bola.smartnotesai.auth.data.model.User;
-import app.bola.smartnotesai.auth.data.repository.UserRepository;
+import app.bola.smartnotesai.security.services.AuthService;
+import app.bola.smartnotesai.user.data.dto.UserRequest;
+import app.bola.smartnotesai.user.data.dto.UserResponse;
+import app.bola.smartnotesai.user.data.model.User;
+import app.bola.smartnotesai.user.data.repository.UserRepository;
 import app.bola.smartnotesai.folder.data.model.Folder;
 import app.bola.smartnotesai.folder.data.repository.FolderRepository;
 import app.bola.smartnotesai.note.data.model.Note;
@@ -57,7 +58,7 @@ public class SmartNoteUserService implements UserService{
 	}
 	
 	@Override
-	public UserResponse update(String publicId, Object userRequest) {
+	public UserResponse update(Object userRequest) {
 		return null;
 	}
 }

@@ -1,7 +1,7 @@
 package app.bola.smartnotesai.folder.service;
 
-import app.bola.smartnotesai.auth.data.model.User;
-import app.bola.smartnotesai.auth.data.repository.UserRepository;
+import app.bola.smartnotesai.user.data.model.User;
+import app.bola.smartnotesai.user.data.repository.UserRepository;
 import app.bola.smartnotesai.folder.data.dto.FolderRequest;
 import app.bola.smartnotesai.folder.data.dto.FolderResponse;
 import app.bola.smartnotesai.folder.data.model.Folder;
@@ -64,7 +64,7 @@ public class SmartNoteFolderService implements FolderService {
 	}
 	
 	@Override
-	public FolderResponse update(String publicId, Object folderRequest) {
+	public FolderResponse update(Object folderRequest) {
 		return null;
 	}
 }

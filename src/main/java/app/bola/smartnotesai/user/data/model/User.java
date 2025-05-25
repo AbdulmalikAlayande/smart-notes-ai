@@ -1,4 +1,4 @@
-package app.bola.smartnotesai.auth.data.model;
+package app.bola.smartnotesai.user.data.model;
 
 import app.bola.smartnotesai.common.data.model.BaseModel;
 import app.bola.smartnotesai.folder.data.model.Folder;
@@ -26,6 +26,9 @@ public class User extends BaseModel {
     private String username;
     
     private String password;
+    
+    @Enumerated(EnumType.STRING)
+    private Role role;
     
     @Builder.Default
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)

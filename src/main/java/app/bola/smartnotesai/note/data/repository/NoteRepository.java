@@ -1,6 +1,6 @@
 package app.bola.smartnotesai.note.data.repository;
 
-import app.bola.smartnotesai.auth.data.model.User;
+import app.bola.smartnotesai.user.data.model.User;
 import app.bola.smartnotesai.common.data.repository.BaseRepository;
 import app.bola.smartnotesai.folder.data.model.Folder;
 import app.bola.smartnotesai.note.data.model.Note;

@@ -7,6 +7,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -29,5 +30,27 @@ public class NoteRequest {
 	String ownerId;
 	String folderId;
 	List<String> tags;
+	
+	@Override
+	public String toString() {
+		return "{\n" +
+				       
+				       "  \"title\": \"" + escapeJson(getTitle()) + "\",\n" +
+				       "  \"content\": \"" + escapeJson(getContent()) + "\",\n" +
+				       "  \"owner\": " + (getOwnerId() != null ? getOwnerId() : "null") + ",\n" +
+				       "  \"folder\": " + (getFolderId() != null ? getFolderId() : "null") + ",\n" +
+				       "  \"tags\": " + (getTags()) + ",\n" +
+				       "}";
+	}
+	
+	private String escapeJson(String value) {
+		if (value == null) return "";
+		return value.replace("\\", "\\\\")
+				       .replace("\"", "\\\"")
+				       .replace("\n", "\\n")
+				       .replace("\r", "\\r")
+				       .replace("\t", "\\t");
+	}
+	
 }
 

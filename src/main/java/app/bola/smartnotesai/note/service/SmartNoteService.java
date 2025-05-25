@@ -1,8 +1,8 @@
 package app.bola.smartnotesai.note.service;
 
 import app.bola.smartnotesai.ai.service.NoteSummarizer;
-import app.bola.smartnotesai.auth.data.model.User;
-import app.bola.smartnotesai.auth.data.repository.UserRepository;
+import app.bola.smartnotesai.user.data.model.User;
+import app.bola.smartnotesai.user.data.repository.UserRepository;
 import app.bola.smartnotesai.folder.data.model.Folder;
 import app.bola.smartnotesai.folder.data.repository.FolderRepository;
 import app.bola.smartnotesai.note.data.dto.NoteRequest;
@@ -14,6 +14,7 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -29,6 +30,7 @@ public class SmartNoteService implements NoteService {
 	final UserRepository userRepository;
 	final FolderRepository folderRepository;
 	final NoteSummarizer noteSummarizer;
+	final SimpMessagingTemplate messagingTemplate;
 	
 	@Override
 	public NoteResponse create(NoteRequest noteRequest) {
@@ -52,9 +54,9 @@ public class SmartNoteService implements NoteService {
 					savedEntity.setSummary(response.getSummary());
 					savedEntity.setKeyPoints(new HashSet<>(response.getKeyPoints()));
 					savedEntity.setTags(new HashSet<>(response.getTags()));
-					log.info("Note summary generated: {}", savedEntity);
 					noteRepository.save(savedEntity);
-					log.info("Note summary saved");
+					
+					messagingTemplate.convertAndSend("/topic/notes/" + savedEntity.getPublicId(), response);
 				})
 				.exceptionally(throwable -> {
 					log.error("Error while generating summary for note: {}", savedEntity.getPublicId(), throwable);
@@ -91,9 +93,9 @@ public class SmartNoteService implements NoteService {
 	}
 	
 	@Override
-	public NoteResponse update(String publicId, Object req) {
+	public NoteResponse update(Object req) {
 		NoteUpdateRequest updateRequest = (NoteUpdateRequest) req;
-		Note note = noteRepository.findByPublicId(publicId)
+		Note note = noteRepository.findByPublicId(updateRequest.getNoteId())
 				            .orElseThrow(() -> new EntityNotFoundException("Note not found"));
 		if (updateRequest.getTitle() != null) {
 			note.setTitle(updateRequest.getTitle());
@@ -135,13 +137,19 @@ public class SmartNoteService implements NoteService {
 	}
 	
 	@Override
-	public NoteResponse changeParentFolder(String publicId, String folderId) {
+	public NoteResponse changeParentFolder(String noteId, String folderId) {
+		
 		return null;
 	}
 	
 	@Override
 	public List<String> addNewTag(String publicId, String tag) {
 		return List.of();
+	}
+	
+	@Override
+	public NoteResponse addNoteToFolder(String noteId, String folderId) {
+		return null;
 	}
 	
 }

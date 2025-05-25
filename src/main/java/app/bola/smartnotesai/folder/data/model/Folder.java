@@ -1,6 +1,6 @@
 package app.bola.smartnotesai.folder.data.model;
 
-import app.bola.smartnotesai.auth.data.model.User;
+import app.bola.smartnotesai.user.data.model.User;
 import app.bola.smartnotesai.common.data.model.BaseModel;
 import app.bola.smartnotesai.note.data.model.Note;
 import jakarta.persistence.*;

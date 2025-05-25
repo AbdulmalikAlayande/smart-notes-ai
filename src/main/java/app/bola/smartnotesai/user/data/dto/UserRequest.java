@@ -1,30 +1,28 @@
-package app.bola.smartnotesai.note.data.dto;
+package app.bola.smartnotesai.user.data.dto;
 
-import app.bola.smartnotesai.note.data.model.Note;
+import app.bola.smartnotesai.user.data.model.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 
-import java.util.List;
+import java.io.Serializable;
 
 /**
- * {@link Note} model update request DTO
+ * {@link User} Model Request Object
  */
 
 @Getter
 @Setter
 @SuperBuilder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class NoteUpdateRequest {
-	
-	String noteId;
-	String title;
-	String content;
-	String summary;
-	List<String> tags;
-}
+public class UserRequest implements Serializable {
 
+    String email;
+    String username;
+    String password;
+    
+}
