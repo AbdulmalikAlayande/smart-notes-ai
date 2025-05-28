@@ -1,5 +1,7 @@
 package app.bola.smartnotesai.security.services;
 
+import app.bola.smartnotesai.note.data.dto.NoteRequest;
+import app.bola.smartnotesai.note.service.NoteService;
 import app.bola.smartnotesai.security.dto.LoginRequest;
 import app.bola.smartnotesai.security.dto.LoginResponse;
 import app.bola.smartnotesai.security.provider.JwtAuthenticationProvider;
@@ -31,57 +33,68 @@ public class SmartNoteAuthService implements AuthService {
     final SmartNoteUserDetailsService userDetailsService;
     final JwtAuthenticationProvider jwtAuthProvider;
     final PasswordEncoder passwordEncoder;
-    
+    final NoteService noteService;
+
     @Override
     public UserResponse create(UserRequest userRequest) {
         User user = modelMapper.map(userRequest, User.class);
-        
+
         String hashedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);
-        
+
         user.setRole(Role.USER);
         User savedEntity = userRepository.save(user);
+
+        // Create a default welcome note with "Hi Junie" content
+        NoteRequest welcomeNote = new NoteRequest();
+        welcomeNote.setTitle("Welcome to SmartNotesAI");
+        welcomeNote.setContent("Hi Junie");
+        welcomeNote.setOwnerId(savedEntity.getPublicId());
+
+        log.info("Creating welcome note with 'Hi Junie' content for user: {}", savedEntity.getUsername());
+        noteService.create(welcomeNote);
+
         return modelMapper.map(savedEntity, UserResponse.class);
     }
-    
+
     @Override
     public LoginResponse login(LoginRequest authRequest) {
-        
+
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(authRequest.getUsername(), authRequest.getPassword())
         );
-        
+
         log.info("Is User Authenticated?:: {}", authentication.isAuthenticated());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         UserDetails user = userDetailsService.loadUserByUsername(authRequest.getUsername());
-        
+
         String refreshToken = jwtAuthProvider.generateRefreshToken(user);
         String accessToken = jwtAuthProvider.generateAccessToken(user);
-        
+
         return toResponse(accessToken, refreshToken);
     }
-    
+
     @Override
     public LoginResponse getRefreshToken(String refreshToken) {
-        
+
         String username = jwtAuthProvider.extractUsername(refreshToken, true);
         UserDetails user = userDetailsService.loadUserByUsername(username);
-        
+
         if (!jwtAuthProvider.validateToken(refreshToken, user, true)) {
             throw new BadCredentialsException("Invalid refresh token");
         }
-        
+
         String newAccessToken = jwtAuthProvider.generateAccessToken(user);
         String newRefreshToken = jwtAuthProvider.generateRefreshToken(user);
-        
+
         return toResponse(newAccessToken, newRefreshToken);
     }
-    
+
     public LoginResponse toResponse(String accessToken, String refreshToken) {
         return LoginResponse.builder()
                        .accessToken(accessToken)
                        .refreshToken(refreshToken)
                        .build();
     }
-    
+
 }
