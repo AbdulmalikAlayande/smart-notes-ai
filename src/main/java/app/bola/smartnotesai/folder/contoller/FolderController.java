@@ -52,7 +52,6 @@ public class FolderController implements BaseController<FolderRequest, FolderRes
 		return ResponseEntity.ok(folders);
 	}
 	
-	
 	@GetMapping("owner/{owner-id}/")
 	public ResponseEntity<Set<FolderResponse>> findByOwner(@PathVariable("owner-id") String ownerId) {
 		return ResponseEntity.ok(folderService.findByOwner(ownerId));
