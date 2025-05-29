@@ -1,5 +1,6 @@
 package app.bola.smartnotesai.folder.service;
 
+import app.bola.smartnotesai.folder.data.dto.FolderUpdateRequest;
 import app.bola.smartnotesai.note.data.repository.NoteRepository;
 import app.bola.smartnotesai.user.data.model.User;
 import app.bola.smartnotesai.user.data.repository.UserRepository;
@@ -79,7 +80,28 @@ public class SmartNoteFolderService implements FolderService {
 	
 	@Override
 	public FolderResponse update(Object folderRequest) {
-		return null;
+		FolderUpdateRequest updateRequest = (FolderUpdateRequest) folderRequest;
+		
+		Folder folder = folderRepository.findByPublicId(updateRequest.getPublicId())
+				                .orElseThrow(() -> new EntityNotFoundException("Folder not found"));
+		
+		if (updateRequest.getName() != null && !updateRequest.getName().isEmpty()) {
+			folder.setName(updateRequest.getName());
+		}
+		
+		if (updateRequest.getParentId() != null && !updateRequest.getParentId().isEmpty()) {
+			if (!updateRequest.getParentId().equals(folder.getParent().getPublicId())) {
+			
+				Folder parentFolder = folderRepository.findByPublicId(updateRequest.getParentId())
+						                      .orElseThrow(() -> new EntityNotFoundException("Parent folder not found"));
+				folder.setParent(parentFolder);
+				log.info("Updated parent for folder: {} to {}", folder.getPublicId(), parentFolder.getPublicId());
+			}
+		}
+		
+		Folder updatedFolder = folderRepository.save(folder);
+		log.info("Folder updated: {}", updatedFolder.getPublicId());
+		return toResponse(updatedFolder);
 	}
 	
 	@Override
@@ -91,7 +113,6 @@ public class SmartNoteFolderService implements FolderService {
 		folderRepository.deleteAll(folder.getChildren());
 		
 		folderRepository.delete(folder);
-		log.info("Folder deleted: {}", publicId);
 	}
 	
 	@Override

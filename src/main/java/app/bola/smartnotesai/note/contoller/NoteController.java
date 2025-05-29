@@ -18,7 +18,7 @@ import java.util.Set;
 @lombok.extern.slf4j.Slf4j
 @Slf4j
 @RestController
-@RequestMapping("/note")
+@RequestMapping("/notes")
 @AllArgsConstructor
 public class NoteController implements BaseController<NoteRequest, NoteResponse> {
 	

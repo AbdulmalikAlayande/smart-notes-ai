@@ -9,7 +9,6 @@ import app.bola.smartnotesai.user.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,14 +18,13 @@ import java.util.Collection;
 
 @AllArgsConstructor
 @RestController
-@RequestMapping("auth/user/")
+@RequestMapping("users")
 public class UserController implements BaseController<UserRequest, UserResponse> {
 	
 	final AuthService authService;
 	final UserService userService;
 	
 	@Override
-	@PostMapping("new")
 	public ResponseEntity<UserResponse> create(@RequestBody UserRequest userRequest) {
 		UserResponse response = authService.create(userRequest);
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
