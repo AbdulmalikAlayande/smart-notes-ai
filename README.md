@@ -48,7 +48,7 @@ SmartNotesAI is a fast and intelligent web application that helps users take not
 |-------------|------------|
 | **Backend** | Java, Spring Boot, Maven |
 | **AI**      | Spring AI, OpenAI, Anthropic, Ollama, Grok, DeepSeek |
-| **Database**| SQL (PostgreSQL, MySQL, etc.) |
+| **Database**| SQL (PostgreSQL) |
 | **API**     | RESTful JSON endpoints |
 | **Build**   | Maven |
 
@@ -191,61 +191,81 @@ The backend exposes a RESTful API for user authentication, folder and note manag
    </summary>
    
    ### Create Note
-   POST /api/notes
+   `POST` /api/notes
    
-   json
-   Copy
-   Edit
+   ```json
    {
      "title": "string",
      "content": "string",
      "folderId": 1
    }
-   Get All Notes
-   GET /api/notes
-   
-   Update Note
-   PUT /api/notes/{id}
-   
-   Delete Note
-   DELETE /api/notes/{id}
+   ```
 
+   ### Get All Notes
+   `GET` /api/notes
+
+   Response: 
+   ```json
+   {
+      
+   }
+   ```
+
+   ### Update Note
+   `PUT` /api/notes/{id}
+
+   Response: 
+   ```json
+   {
+      
+   }
+   ```
+
+   ### Delete Note
+   `DELETE` /api/notes/{id}
+
+   Response: 
+   ```json
+   {
+      
+   }
+   ```
 </details>
 
-<details> <summary><strong>🧠 AI Features</strong></summary>
-Summarize Note
-POST /api/ai/summarize
+<details> 
+   <summary>
+      <strong>🧠 AI Features</strong>
+   </summary>
 
-json
-Copy
-Edit
-{
-  "content": "Your full note content here"
-}
-Response:
+   ### Summarize Note
+   `POST` /api/ai/summarize
+   
+   ```json
+   {
+     "content": "Your full note content here"
+   }
+   ```
+   Response:
+   
+   ```json
+   {
+     "summary": "A brief summary...",
+     "keyPoints": ["Point 1", "Point 2"]
+   }
+   ```
+   Generate Tags
+   POST /api/ai/tags
 
-json
-Copy
-Edit
-{
-  "summary": "A brief summary...",
-  "keyPoints": ["Point 1", "Point 2"]
-}
-Generate Tags
-POST /api/ai/tags
-
-json
-Copy
-Edit
-{
-  "content": "Note content for tagging"
-}
-Response:
-
-json
-Copy
-Edit
-{
-  "tags": ["Tag1", "Tag2", "Tag3"]
-}
-</details> ```
+   ```json
+   {
+     "content": ""
+   }
+   ```
+   
+   Response:
+   ```json
+   {
+     "tags": ["Tag1", "Tag2", "Tag3"]
+   }
+   ```
+</details>
