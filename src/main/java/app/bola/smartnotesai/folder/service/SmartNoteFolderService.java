@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -66,5 +68,15 @@ public class SmartNoteFolderService implements FolderService {
 	@Override
 	public FolderResponse update(Object folderRequest) {
 		return null;
+	}
+	
+	@Override
+	public void delete(String publicId) {
+	
+	}
+	
+	@Override
+	public Collection<FolderResponse> findAll() {
+		return List.of();
 	}
 }
