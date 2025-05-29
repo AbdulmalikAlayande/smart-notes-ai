@@ -232,40 +232,40 @@ The backend exposes a RESTful API for user authentication, folder and note manag
    ```
 </details>
 
-<details> <summary><strong>🧠 AI Features</strong></summary>
-Summarize Note
-POST /api/ai/summarize
+<details> 
+   <summary>
+      <strong>🧠 AI Features</strong>
+   </summary>
 
-json
-Copy
-Edit
-{
-  "content": "Your full note content here"
-}
-Response:
+   ### Summarize Note
+   `POST` /api/ai/summarize
+   
+   ```json
+   {
+     "content": "Your full note content here"
+   }
+   ```
+   Response:
+   
+   ```json
+   {
+     "summary": "A brief summary...",
+     "keyPoints": ["Point 1", "Point 2"]
+   }
+   ```
+   Generate Tags
+   POST /api/ai/tags
 
-json
-Copy
-Edit
-{
-  "summary": "A brief summary...",
-  "keyPoints": ["Point 1", "Point 2"]
-}
-Generate Tags
-POST /api/ai/tags
-
-json
-Copy
-Edit
-{
-  "content": "Note content for tagging"
-}
-Response:
-
-json
-Copy
-Edit
-{
-  "tags": ["Tag1", "Tag2", "Tag3"]
-}
-</details> ```
+   ```json
+   {
+     "content": ""
+   }
+   ```
+   
+   Response:
+   ```json
+   {
+     "tags": ["Tag1", "Tag2", "Tag3"]
+   }
+   ```
+</details>
