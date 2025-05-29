@@ -48,7 +48,7 @@ SmartNotesAI is a fast and intelligent web application that helps users take not
 |-------------|------------|
 | **Backend** | Java, Spring Boot, Maven |
 | **AI**      | Spring AI, OpenAI, Anthropic, Ollama, Grok, DeepSeek |
-| **Database**| SQL (PostgreSQL, MySQL, etc.) |
+| **Database**| SQL (PostgreSQL) |
 | **API**     | RESTful JSON endpoints |
 | **Build**   | Maven |
 
@@ -191,25 +191,45 @@ The backend exposes a RESTful API for user authentication, folder and note manag
    </summary>
    
    ### Create Note
-   POST /api/notes
+   `POST` /api/notes
    
-   json
-   Copy
-   Edit
+   ```json
    {
      "title": "string",
      "content": "string",
      "folderId": 1
    }
-   Get All Notes
-   GET /api/notes
-   
-   Update Note
-   PUT /api/notes/{id}
-   
-   Delete Note
-   DELETE /api/notes/{id}
+   ```
 
+   ### Get All Notes
+   `GET` /api/notes
+
+   Response: 
+   ```json
+   {
+      
+   }
+   ```
+
+   ### Update Note
+   `PUT` /api/notes/{id}
+
+   Response: 
+   ```json
+   {
+      
+   }
+   ```
+
+   ### Delete Note
+   `DELETE` /api/notes/{id}
+
+   Response: 
+   ```json
+   {
+      
+   }
+   ```
 </details>
 
 <details> <summary><strong>🧠 AI Features</strong></summary>
