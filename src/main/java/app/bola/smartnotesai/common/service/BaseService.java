@@ -18,4 +18,8 @@ public interface BaseService<REQ, ENT, RES> {
 	}
 	
 	RES update(Object req);
+	
+	void delete(String publicId);
+	
+	Collection<RES> findAll();
 }

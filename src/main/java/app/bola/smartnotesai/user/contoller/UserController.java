@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Collection;
+
 
 @AllArgsConstructor
 @RestController
@@ -34,5 +36,23 @@ public class UserController implements BaseController<UserRequest, UserResponse>
 	public <T> ResponseEntity<?> update(T noteRequest) {
 		UserUpdateRequest request = (UserUpdateRequest) noteRequest;
 		return ResponseEntity.ok(userService.update(request));
+	}
+	
+	@Override
+	public ResponseEntity<UserResponse> findByPublicId(String publicId) {
+		UserResponse response = userService.findByPublicId(publicId);
+		return ResponseEntity.status(HttpStatus.FOUND).body(response);
+	}
+	
+	@Override
+	public ResponseEntity<?> delete(String publicId) {
+		userService.delete(publicId);
+		return ResponseEntity.noContent().build();
+	}
+	
+	@Override
+	public ResponseEntity<Collection<UserResponse>> findAll() {
+		Collection<UserResponse> response = userService.findAll();
+		return ResponseEntity.status(HttpStatus.FOUND).body(response);
 	}
 }

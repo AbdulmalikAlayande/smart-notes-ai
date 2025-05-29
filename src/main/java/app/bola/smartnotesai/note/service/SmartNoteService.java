@@ -1,6 +1,7 @@
 package app.bola.smartnotesai.note.service;
 
 import app.bola.smartnotesai.ai.service.NoteSummarizer;
+import app.bola.smartnotesai.common.exception.InvalidRequestException;
 import app.bola.smartnotesai.user.data.model.User;
 import app.bola.smartnotesai.user.data.repository.UserRepository;
 import app.bola.smartnotesai.folder.data.model.Folder;
@@ -111,6 +112,25 @@ public class SmartNoteService implements NoteService {
 	}
 	
 	@Override
+	public void delete(String publicId) {
+		try {
+			Note note = noteRepository.findByPublicId(publicId)
+					            .orElseThrow(() -> new EntityNotFoundException("Note not found"));
+			noteRepository.delete(note);
+			log.info("Note deleted: {}", publicId);
+		} catch (Exception exception) {
+			log.error("Error deleting note: {}", publicId, exception);
+			throw new InvalidRequestException(exception);
+		}
+	}
+	
+	@Override
+	public Set<NoteResponse> findAll() {
+		List<Note> notes = noteRepository.findAll();
+		return toResponse(notes);
+	}
+	
+	@Override
 	public Set<NoteResponse> findAllByOwnerId(String ownerId) {
 			try {
 				User owner = userRepository.findByPublicId(ownerId)
@@ -139,17 +159,52 @@ public class SmartNoteService implements NoteService {
 	@Override
 	public NoteResponse changeParentFolder(String noteId, String folderId) {
 		
-		return null;
-	}
-	
-	@Override
-	public List<String> addNewTag(String publicId, String tag) {
-		return List.of();
+		Note note = noteRepository.findByPublicId(noteId)
+				            .orElseThrow(() -> new EntityNotFoundException("Note not found"));
+		
+		if (folderId == null || folderId.isEmpty()) {
+			note.setFolder(null);
+			log.info("Note {} removed from folder", noteId);
+		} else {
+			Folder folder = folderRepository.findByPublicId(folderId)
+					                .orElseThrow(() -> new EntityNotFoundException("Folder not found"));
+			note.setFolder(folder);
+			log.info("Note {} moved to folder {}", noteId, folderId);
+		}
+		
+		Note updatedNote = noteRepository.save(note);
+		return toResponse(updatedNote);
 	}
 	
 	@Override
 	public NoteResponse addNoteToFolder(String noteId, String folderId) {
-		return null;
+		Note note = noteRepository.findByPublicId(noteId)
+				            .orElseThrow(() -> new EntityNotFoundException("Note not found"));
+		
+		if (folderId == null || folderId.isEmpty()) {
+			throw new IllegalArgumentException("Folder ID cannot be null or empty");
+		}
+		
+		Folder folder = folderRepository.findByPublicId(folderId)
+				                .orElseThrow(() -> new EntityNotFoundException("Folder not found"));
+		
+		note.setFolder(folder);
+		log.info("Note {} added to folder {}", noteId, folderId);
+		
+		Note updatedNote = noteRepository.save(note);
+		return toResponse(updatedNote);
 	}
 	
+	@Override
+	public NoteResponse addNewTag(String publicId, String tag) {
+		Note note = noteRepository.findByPublicId(publicId)
+				                  .orElseThrow(() -> new EntityNotFoundException("Note not found"));
+		Set<String> tags = note.getTags();
+		tags.add(tag);
+		
+		note.setTags(tags);
+		Note updatedNote = noteRepository.save(note);
+		
+		return toResponse(updatedNote);
+	}
 }

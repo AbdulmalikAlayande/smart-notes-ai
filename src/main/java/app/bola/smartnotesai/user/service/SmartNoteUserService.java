@@ -14,6 +14,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 
 @Slf4j
@@ -45,6 +46,11 @@ public class SmartNoteUserService implements UserService{
 		userRepository.delete(user);
 		log.info("Deleted user: {}", publicId);
 		
+	}
+	
+	@Override
+	public Collection<UserResponse> findAll() {
+		return List.of();
 	}
 	
 	@Override

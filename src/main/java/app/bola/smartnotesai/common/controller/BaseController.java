@@ -3,9 +3,9 @@ package app.bola.smartnotesai.common.controller;
 import app.bola.smartnotesai.note.data.dto.NoteResponse;
 import app.bola.smartnotesai.note.data.dto.NoteUpdateRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Collection;
 
 public interface BaseController<REQ, RES> {
 	
@@ -14,4 +14,13 @@ public interface BaseController<REQ, RES> {
 	
 	@PutMapping("update")
 	<T> ResponseEntity<?> update(@RequestBody T noteRequest);
+	
+	@GetMapping ("{public-id}")
+	ResponseEntity<RES> findByPublicId(@PathVariable("public-id") String parameter);
+	
+	@DeleteMapping("{public-id}")
+	ResponseEntity<?> delete(@PathVariable("public-id") String publicId);
+	
+	@GetMapping("all")
+	ResponseEntity<Collection<RES>> findAll();
 }
