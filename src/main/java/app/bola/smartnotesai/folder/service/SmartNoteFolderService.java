@@ -1,5 +1,6 @@
 package app.bola.smartnotesai.folder.service;
 
+import app.bola.smartnotesai.note.data.repository.NoteRepository;
 import app.bola.smartnotesai.user.data.model.User;
 import app.bola.smartnotesai.user.data.repository.UserRepository;
 import app.bola.smartnotesai.folder.data.dto.FolderRequest;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -25,6 +27,7 @@ public class SmartNoteFolderService implements FolderService {
 	final FolderRepository folderRepository;
 	final ModelMapper mapper;
 	final UserRepository userRepository;
+	final NoteRepository noteRepository;
 	final NoteService noteService;
 	
 	@Override
@@ -49,7 +52,9 @@ public class SmartNoteFolderService implements FolderService {
 	
 	@Override
 	public FolderResponse findByPublicId(String publicId) {
-		return null;
+		return folderRepository.findByPublicId(publicId)
+				.map(this::toResponse)
+				.orElseThrow(() -> new EntityNotFoundException("Folder with Id %s does not exist".formatted(publicId)));
 	}
 	
 	@Override
@@ -66,17 +71,40 @@ public class SmartNoteFolderService implements FolderService {
 	}
 	
 	@Override
+	public Set<FolderResponse> toResponse(Collection<Folder> folders) {
+		return folders.stream()
+				       .map(this::toResponse)
+				       .collect(Collectors.toSet());
+	}
+	
+	@Override
 	public FolderResponse update(Object folderRequest) {
 		return null;
 	}
 	
 	@Override
 	public void delete(String publicId) {
-	
+		Folder folder = folderRepository.findByPublicId(publicId)
+				                .orElseThrow(() -> new EntityNotFoundException("Folder not found"));
+		
+		noteRepository.deleteAll(folder.getNotes());
+		folderRepository.deleteAll(folder.getChildren());
+		
+		folderRepository.delete(folder);
+		log.info("Folder deleted: {}", publicId);
 	}
 	
 	@Override
-	public Collection<FolderResponse> findAll() {
-		return List.of();
+	public Set<FolderResponse> findAll() {
+		List<Folder> folders = folderRepository.findAll();
+		return toResponse(folders);
+	}
+	
+	public Set<FolderResponse> findByOwner(String ownerId) {
+		User owner = userRepository.findByPublicId(ownerId)
+				             .orElseThrow(() -> new EntityNotFoundException("User not found"));
+		
+		List<Folder> folders = folderRepository.findByOwner(owner);
+		return toResponse(folders);
 	}
 }

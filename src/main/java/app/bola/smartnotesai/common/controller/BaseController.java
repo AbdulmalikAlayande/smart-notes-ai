@@ -1,7 +1,5 @@
 package app.bola.smartnotesai.common.controller;
 
-import app.bola.smartnotesai.note.data.dto.NoteResponse;
-import app.bola.smartnotesai.note.data.dto.NoteUpdateRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

@@ -31,7 +31,7 @@ public class Note extends BaseModel {
     @ManyToOne
     private User owner;
     
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "folder_id", referencedColumnName = "id")
     private Folder folder;
     

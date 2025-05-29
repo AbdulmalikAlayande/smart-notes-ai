@@ -5,6 +5,11 @@ import app.bola.smartnotesai.folder.data.dto.FolderRequest;
 import app.bola.smartnotesai.folder.data.dto.FolderResponse;
 import app.bola.smartnotesai.folder.data.model.Folder;
 
-public interface FolderService extends BaseService<FolderRequest, Folder, FolderResponse> {
+import java.util.Set;
 
+public interface FolderService extends BaseService<FolderRequest, Folder, FolderResponse> {
+	
+	Set<FolderResponse> findByOwner(String publicId);
+	
+	Set<FolderResponse> findAll();
 }
