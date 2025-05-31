@@ -7,7 +7,6 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -30,6 +29,7 @@ public class NoteRequest {
 	String ownerId;
 	String folderId;
 	List<String> tags;
+	List<AttachmentRequest> attachments;
 	
 	@Override
 	public String toString() {

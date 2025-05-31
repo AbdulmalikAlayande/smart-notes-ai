@@ -4,6 +4,7 @@ import app.bola.smartnotesai.ai.dto.NoteSummarizerResponse;
 import app.bola.smartnotesai.ai.service.NoteSummarizer;
 import app.bola.smartnotesai.ai.service.TagGenerator;
 import app.bola.smartnotesai.common.exception.InvalidRequestException;
+import app.bola.smartnotesai.note.data.repository.AttachmentRepository;
 import app.bola.smartnotesai.user.data.model.User;
 import app.bola.smartnotesai.user.data.repository.UserRepository;
 import app.bola.smartnotesai.folder.data.model.Folder;
@@ -29,12 +30,13 @@ import java.util.stream.Collectors;
 public class SmartNoteService implements NoteService {
 	
 	final ModelMapper mapper;
+	final TagGenerator tagGenerator;
+	final NoteSummarizer noteSummarizer;
 	final NoteRepository noteRepository;
 	final UserRepository userRepository;
 	final FolderRepository folderRepository;
-	final NoteSummarizer noteSummarizer;
 	final SimpMessagingTemplate messagingTemplate;
-	final TagGenerator tagGenerator;
+	final AttachmentRepository attachmentRepository;
 	
 	@Override
 	public NoteResponse create(NoteRequest noteRequest) {

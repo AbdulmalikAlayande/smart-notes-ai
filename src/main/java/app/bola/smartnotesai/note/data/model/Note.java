@@ -10,6 +10,7 @@ import lombok.experimental.SuperBuilder;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.List;
 
 @Getter
 @Setter
@@ -30,6 +31,9 @@ public class Note extends BaseModel {
     
     @ManyToOne
     private User owner;
+    
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<Attachment> attachments;
     
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "folder_id", referencedColumnName = "id")

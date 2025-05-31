@@ -2,7 +2,6 @@ package app.bola.smartnotesai.ai.service;
 
 import app.bola.smartnotesai.ai.dto.TagGeneratorResponse;
 import app.bola.smartnotesai.ai.service.llm.resilience.ResilientLlmService;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
@@ -16,7 +15,6 @@ import java.util.Set;
 
 @Slf4j
 @Component
-@AllArgsConstructor
 public class TagGenerator {
 	
 	final PromptTemplate promptTemplate;
