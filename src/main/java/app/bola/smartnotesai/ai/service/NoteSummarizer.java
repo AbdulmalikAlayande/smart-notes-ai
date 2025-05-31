@@ -22,6 +22,12 @@ public class NoteSummarizer {
 	final ResilientLlmService llmService;
 	private static final int MAX_CHARS = 10000;
 	
+	/**
+	 * Constructs a NoteSummarizer with the specified LLM service and prompt template.
+	 *
+	 * @param llmService the resilient LLM service used for generating summaries
+	 * @param summarizePromptResource the class path resource containing the prompt template for summarization
+	 */
 	public NoteSummarizer(ResilientLlmService llmService,
 	                      @Value("prompts/summarize-note.st")
 	                      ClassPathResource summarizePromptResource) {
@@ -30,11 +36,23 @@ public class NoteSummarizer {
 		this.summarizePrompt = new PromptTemplate(summarizePromptResource);
 	}
 	
+	/**
+	 * Asynchronously generates a summary for the given note content.
+	 *
+	 * @param noteContent the content of the note to be summarized
+	 * @return a CompletableFuture containing the NoteSummarizerResponse with the summary, tags, and key points
+	 */
 	@Async(value = "taskExecutor")
 	public CompletableFuture<NoteSummarizerResponse> generateSummaryAsync(String noteContent){
 		return CompletableFuture.supplyAsync(() -> generateSummary(noteContent));
 	}
 	
+	/**
+	 * Generates a summary for the given note content.
+	 *
+	 * @param noteContent the content of the note to be summarized
+	 * @return a NoteSummarizerResponse containing the summary, tags, and key points
+	 */
 	public NoteSummarizerResponse generateSummary(String noteContent){
 		String processedNote = truncateIfNeeded(noteContent);
 		try {
@@ -49,6 +67,11 @@ public class NoteSummarizer {
 		
 	}
 	
+	/**
+	 * Creates a fallback response in case of failure to generate a summary.
+	 *
+	 * @return a NoteSummarizerResponse with a default error message and tags
+	 */
 	private NoteSummarizerResponse createFallbackResponse() {
 		return NoteSummarizerResponse.builder()
 				       .summary("Unable to generate summary")
@@ -57,7 +80,12 @@ public class NoteSummarizer {
 				       .build();
 	}
 	
-	
+	/**
+	 * Truncates the note content if it exceeds the maximum character limit.
+	 *
+	 * @param content the content to be truncated
+	 * @return the truncated content with a note if it was truncated
+	 */
 	private String truncateIfNeeded(String content) {
 		if (content.length() > MAX_CHARS) {
 			return content.substring(0, MAX_CHARS) + "... [Note truncated due to length]";

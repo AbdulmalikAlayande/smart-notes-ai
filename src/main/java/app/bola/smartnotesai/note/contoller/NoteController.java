@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 @lombok.extern.slf4j.Slf4j
@@ -86,5 +87,18 @@ public class NoteController implements BaseController<NoteRequest, NoteResponse>
 	public ResponseEntity<Collection<NoteResponse>> findAllByFolderId(@PathVariable("folder-id") String folderId) {
 		Set<NoteResponse> notes = noteService.findAllByFolderId(folderId);
 		return ResponseEntity.ok(notes);
+	}
+	
+	
+	@GetMapping("/{public-id}/generate-summary")
+	public ResponseEntity<String> generateSummary(@PathVariable("public-id") String publicId) {
+		String response = noteService.generateSummary(publicId);
+		return ResponseEntity.ok(response);
+	}
+	
+	@GetMapping("/{public-id}/generate-tags")
+	public ResponseEntity<List<String>> generateTags(@PathVariable("public-id") String publicId) {
+		List<String> response = noteService.generateTags(publicId);
+		return ResponseEntity.ok(response);
 	}
 }

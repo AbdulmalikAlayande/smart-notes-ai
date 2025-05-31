@@ -37,7 +37,6 @@ public class ResilientLlmService {
 		
 		Exception lastException = null;
 		
-		// Try each provider in order
 		for (LLMProvider provider : healthyProviders) {
 			log.info("Attempting to use provider: {}", provider.getName());
 			
@@ -54,17 +53,16 @@ public class ResilientLlmService {
 				log.warn("Failed to generate completion using provider: {} - {}",
 						provider.getName(), e.getMessage());
 				healthTracker.recordFailure(provider.getName());
-				
-				// Continue to next provider instead of breaking
 				log.info("Trying next provider...");
 			}
 		}
 		
-		// If we get here, all providers failed
 		log.error("All {} providers failed to generate completion", healthyProviders.size());
+		
 		if (lastException != null) {
 			throw new RuntimeException("All providers failed to generate a response. Last error: " + lastException.getMessage(), lastException);
-		} else {
+		}
+		else {
 			throw new RuntimeException("All providers failed to generate a response");
 		}
 	}

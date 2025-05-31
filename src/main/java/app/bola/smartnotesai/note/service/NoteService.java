@@ -19,4 +19,8 @@ public interface NoteService extends BaseService<NoteRequest, Note, NoteResponse
 	NoteResponse addNewTag(String publicId, String tag);
 	
 	NoteResponse addNoteToFolder(String noteId, String folderId);
+	
+	String generateSummary(String publicId);
+	
+	List<String> generateTags(String publicId);
 }

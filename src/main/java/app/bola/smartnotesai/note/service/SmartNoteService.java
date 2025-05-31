@@ -1,6 +1,8 @@
 package app.bola.smartnotesai.note.service;
 
+import app.bola.smartnotesai.ai.dto.NoteSummarizerResponse;
 import app.bola.smartnotesai.ai.service.NoteSummarizer;
+import app.bola.smartnotesai.ai.service.TagGenerator;
 import app.bola.smartnotesai.common.exception.InvalidRequestException;
 import app.bola.smartnotesai.user.data.model.User;
 import app.bola.smartnotesai.user.data.repository.UserRepository;
@@ -32,6 +34,7 @@ public class SmartNoteService implements NoteService {
 	final FolderRepository folderRepository;
 	final NoteSummarizer noteSummarizer;
 	final SimpMessagingTemplate messagingTemplate;
+	final TagGenerator tagGenerator;
 	
 	@Override
 	public NoteResponse create(NoteRequest noteRequest) {
@@ -193,6 +196,36 @@ public class SmartNoteService implements NoteService {
 		
 		Note updatedNote = noteRepository.save(note);
 		return toResponse(updatedNote);
+	}
+	
+	@Override
+	public String generateSummary(String publicId) {
+		Note note = noteRepository.findByPublicId(publicId)
+				            .orElseThrow(() -> new EntityNotFoundException("Note not found"));
+		
+		NoteSummarizerResponse summary = noteSummarizer.generateSummary(note.getContent());
+		
+		note.setSummary(summary.getSummary());
+		Note updatedNote = noteRepository.save(note);
+		
+		return updatedNote.getSummary();
+	}
+	
+	@Override
+	public List<String> generateTags(String publicId) {
+		Note note = noteRepository.findByPublicId(publicId)
+				            .orElseThrow(() -> new EntityNotFoundException("Note not found"));
+		Set<String> tags = tagGenerator.generateTags(note.getContent()).getTags();
+		
+		if (note.getTags() == null) {
+			note.setTags(tags);
+		}
+		else {
+			tags.forEach(tag -> note.getTags().add(tag));
+		}
+		
+		Note updatedNote = noteRepository.save(note);
+		return new ArrayList<>(updatedNote.getTags());
 	}
 	
 	@Override
