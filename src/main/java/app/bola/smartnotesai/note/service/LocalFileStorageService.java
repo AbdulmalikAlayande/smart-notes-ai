@@ -80,7 +80,7 @@ public class LocalFileStorageService implements FileStorageService{
 			
 			Path filePath = folderPath.resolve(finalFileName);
 			
-			if (Files.exists(filePath)) {
+			if (fileExists(folderName, fileName)) {
 				log.warn("File already exists, will be overwritten: {}", filePath);
 			}
 			
@@ -146,5 +146,43 @@ public class LocalFileStorageService implements FileStorageService{
 		
 		int lastDotIndex = fileName.lastIndexOf('.');
 		return lastDotIndex > 0 ? fileName.substring(lastDotIndex) : "";
+	}
+	
+	public boolean fileExists(String folderName, String fileName) {
+		Path filePath = getFilePath(folderName, fileName);
+		return Files.exists(filePath);
+	}
+	
+	
+	public boolean deleteFile(String folderName, String fileName) {
+		try {
+			Path filePath = getFilePath(folderName, fileName);
+			boolean deleted = Files.deleteIfExists(filePath);
+			if (deleted) {
+				log.info("File deleted successfully: {}", filePath);
+			} else {
+				log.warn("File not found for deletion: {}", filePath);
+			}
+			return deleted;
+		} catch (IOException e) {
+			log.error("Failed to delete file: {}", e.getMessage(), e);
+			return false;
+		}
+	}
+	
+
+	public long getFileSize(String folderName, String fileName) {
+		try {
+			Path filePath = getFilePath(folderName, fileName);
+			return Files.exists(filePath) ? Files.size(filePath) : -1;
+		} catch (IOException e) {
+			log.error("Failed to get file size: {}", e.getMessage());
+			return -1;
+		}
+	}
+	
+	public Path getFilePath(String folderName, String fileName) {
+		return Paths.get(uploadDir, "smart-notes-ai", "attachments",
+				sanitizeInput(folderName), sanitizeInput(fileName));
 	}
 }
