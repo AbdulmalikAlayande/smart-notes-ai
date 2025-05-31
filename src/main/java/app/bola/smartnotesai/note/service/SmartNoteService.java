@@ -37,6 +37,7 @@ public class SmartNoteService implements NoteService {
 	final FolderRepository folderRepository;
 	final SimpMessagingTemplate messagingTemplate;
 	final AttachmentRepository attachmentRepository;
+	final CloudService cloudService;
 	
 	@Override
 	public NoteResponse create(NoteRequest noteRequest) {

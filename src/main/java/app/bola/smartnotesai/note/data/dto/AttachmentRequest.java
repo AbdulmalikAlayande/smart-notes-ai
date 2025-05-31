@@ -6,7 +6,6 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.experimental.SuperBuilder;
-import jakarta.validation.constraints.NotBlank;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
@@ -24,15 +23,9 @@ import java.io.Serializable;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AttachmentRequest implements Serializable {
 	
-	long fileSize;
 	String description;
-	
-	@NotBlank
-	String fileName;
-	
+	String mediaType;
 	@NotNull
 	MultipartFile file;
 	
-	@NotBlank
-	String mediaType;
 }

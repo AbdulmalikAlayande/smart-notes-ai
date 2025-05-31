@@ -3,6 +3,7 @@ package app.bola.smartnotesai.note.data.model;
 import app.bola.smartnotesai.common.data.model.BaseModel;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.validator.constraints.URL;
 
 @Getter
@@ -10,7 +11,7 @@ import org.hibernate.validator.constraints.URL;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
+@SuperBuilder
 public class Attachment extends BaseModel {
 
     private String fileName;

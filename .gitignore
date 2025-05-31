@@ -8,9 +8,13 @@ src/main/resources/secret.properties
 
 /smartnotes-secrets.ps1
 /smartnotes-secrets.bat
+/smartnotes-cloudinary-secrets.bat
+/smartnotes-cloudinary-secrets.ps1
 
 smartnotes-secrets.ps1
 smartnotes-secrets.bat
+smartnotes-cloudinary-secrets.bat
+smartnotes-cloudinary-secrets.ps1
 
 ### STS ###
 .apt_generated
