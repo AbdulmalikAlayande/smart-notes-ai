@@ -31,7 +31,7 @@ public class LocalFileStorageService implements FileStorageService{
 		this.baseUrl = baseUrl;
 		initializeUploadDirectory();
 	}
-	
+
 	private void initializeUploadDirectory() {
 		try {
 			Path uploadPath = Paths.get(uploadDir);

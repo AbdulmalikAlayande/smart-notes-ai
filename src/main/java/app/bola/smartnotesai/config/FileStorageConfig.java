@@ -6,14 +6,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
 @Slf4j
 @Getter
 @Configuration
-public class CloudinaryConfig {
+public class FileStorageConfig implements WebMvcConfigurer {
 	
 	@Value("${app.cloudinary.cloud-name}")
 	private String cloudName;
@@ -23,6 +26,8 @@ public class CloudinaryConfig {
 	private String apiSecret;
 	@Value("${app.cloudinary.cloudinary-url}")
 	private String cloudinaryUrl;
+	@Value("${app.file.upload-dir}")
+	private String uploadDir;
 	
 	@Bean
 	public Cloudinary cloudinary(){
@@ -40,5 +45,13 @@ public class CloudinaryConfig {
 		}
 		
 		else return new Cloudinary(cloudinaryUrl);
+	}
+	
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		String uploadPath = Paths.get(uploadDir).toAbsolutePath().toUri().toString();
+		registry.addResourceHandler("/files/**")
+				.addResourceLocations(uploadPath)
+				.setCachePeriod(31556926);
 	}
 }
