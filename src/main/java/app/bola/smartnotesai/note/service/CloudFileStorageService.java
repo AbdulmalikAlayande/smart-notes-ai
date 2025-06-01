@@ -30,6 +30,8 @@ public class CloudFileStorageService implements FileStorageService{
 			throw new RuntimeException("File is empty");
 		}
 		
+		validateFile(file);
+		
 		try{
 			Map<String, String> option = new HashMap<>();
 			option.put("resource_type", "auto");

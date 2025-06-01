@@ -1,19 +1,23 @@
 package app.bola.smartnotesai.note.service;
 
-import app.bola.smartnotesai.note.data.dto.AttachmentRequest;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
-public interface CloudService {
+@Component
+public class CloudService {
 	
-	String uploadFile(AttachmentRequest attachmentRequest);
-	String downloadFile(String fileId);
+	final FileStorageService cloudFileStorageServices;
 	
-	class CloudServiceException extends RuntimeException {
-		public CloudServiceException(String message) {
-			super(message);
-		}
+	final FileStorageService localFileStorageServices;
+	
+	
+	public CloudService(@Qualifier("cloudFileStorageService") FileStorageService cloudFileStorageServices,
+	                    @Qualifier("localFileStorageService") FileStorageService localFileStorageServices) {
 		
-		public CloudServiceException(String message, Throwable cause) {
-			super(message, cause);
-		}
+		this.cloudFileStorageServices = cloudFileStorageServices;
+		this.localFileStorageServices = localFileStorageServices;
 	}
+	
+	
 }
