@@ -47,6 +47,8 @@ public interface FileStorageService {
 	
 	boolean deleteFile(String publicId);
 	
+	String getName();
+	
 	class FileStorageException extends RuntimeException {
 		
 		public FileStorageException(String message) {

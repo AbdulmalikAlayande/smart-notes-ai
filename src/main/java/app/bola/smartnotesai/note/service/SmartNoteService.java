@@ -5,6 +5,7 @@ import app.bola.smartnotesai.ai.service.NoteSummarizer;
 import app.bola.smartnotesai.ai.service.TagGenerator;
 import app.bola.smartnotesai.common.exception.InvalidRequestException;
 import app.bola.smartnotesai.note.data.dto.AttachmentRequest;
+import app.bola.smartnotesai.note.data.model.Attachment;
 import app.bola.smartnotesai.note.data.repository.AttachmentRepository;
 import app.bola.smartnotesai.user.data.model.User;
 import app.bola.smartnotesai.user.data.repository.UserRepository;
@@ -57,11 +58,12 @@ public class SmartNoteService implements NoteService {
 			log.warn("Folder not found, creating note without folder");
 		}
 		
+		Note savedEntity = noteRepository.save(note);
 		if (noteRequest.getAttachments() != null && !noteRequest.getAttachments().isEmpty()) {
-			attachmentManager.uploadAttachments((MultipartFile[]) noteRequest.getAttachments().stream().map(AttachmentRequest::getFile).toArray());
+			List<Attachment> attachments = attachmentManager.uploadAttachments(noteRequest.getAttachments(), note);
+			savedEntity.setAttachments(new ArrayList<>(attachments));
 		}
 		
-		Note savedEntity = noteRepository.save(note);
 		noteSummarizer.generateSummaryAsync(noteRequest.getContent())
 				.thenAccept(response -> {
 					savedEntity.setSummary(response.getSummary());

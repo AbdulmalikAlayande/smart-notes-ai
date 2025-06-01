@@ -124,4 +124,9 @@ public class CloudFileStorageService implements FileStorageService{
 			throw new FileStorageException(exception.getMessage(), exception);
 		}
 	}
+	
+	@Override
+	public String getName() {
+		return "cloud-file-storage-service";
+	}
 }

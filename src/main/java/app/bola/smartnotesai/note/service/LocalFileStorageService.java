@@ -125,6 +125,11 @@ public class LocalFileStorageService implements FileStorageService{
 		return deleteFile(publicId, "");
 	}
 	
+	@Override
+	public String getName() {
+		return "local-file-storage-service";
+	}
+	
 	public boolean deleteFile(String folderName, String fileName) {
 		try {
 			Path filePath = getFilePath(folderName, fileName);
