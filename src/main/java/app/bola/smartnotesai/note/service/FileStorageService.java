@@ -44,4 +44,17 @@ public interface FileStorageService {
 		int lastDotIndex = fileName.lastIndexOf('.');
 		return lastDotIndex > 0 ? fileName.substring(lastDotIndex) : "";
 	}
+	
+	boolean deleteFile(String publicId);
+	
+	class FileStorageException extends RuntimeException {
+		
+		public FileStorageException(String message) {
+			super(message);
+		}
+		
+		public FileStorageException(String message, Throwable cause) {
+			super(message, cause);
+		}
+	}
 }

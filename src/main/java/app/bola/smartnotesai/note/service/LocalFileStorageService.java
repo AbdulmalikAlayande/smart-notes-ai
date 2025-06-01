@@ -120,6 +120,10 @@ public class LocalFileStorageService implements FileStorageService{
 		return Files.exists(filePath);
 	}
 	
+	@Override
+	public boolean deleteFile(String publicId) {
+		return deleteFile(publicId, "");
+	}
 	
 	public boolean deleteFile(String folderName, String fileName) {
 		try {
