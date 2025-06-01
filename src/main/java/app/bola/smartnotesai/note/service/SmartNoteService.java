@@ -4,6 +4,7 @@ import app.bola.smartnotesai.ai.dto.NoteSummarizerResponse;
 import app.bola.smartnotesai.ai.service.NoteSummarizer;
 import app.bola.smartnotesai.ai.service.TagGenerator;
 import app.bola.smartnotesai.common.exception.InvalidRequestException;
+import app.bola.smartnotesai.note.data.dto.AttachmentRequest;
 import app.bola.smartnotesai.note.data.repository.AttachmentRepository;
 import app.bola.smartnotesai.user.data.model.User;
 import app.bola.smartnotesai.user.data.repository.UserRepository;
@@ -20,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -37,7 +39,7 @@ public class SmartNoteService implements NoteService {
 	final FolderRepository folderRepository;
 	final SimpMessagingTemplate messagingTemplate;
 	final AttachmentRepository attachmentRepository;
-	final CloudService cloudService;
+	final AttachmentManager attachmentManager;
 	
 	@Override
 	public NoteResponse create(NoteRequest noteRequest) {
@@ -53,6 +55,10 @@ public class SmartNoteService implements NoteService {
 		}
 		else {
 			log.warn("Folder not found, creating note without folder");
+		}
+		
+		if (noteRequest.getAttachments() != null && !noteRequest.getAttachments().isEmpty()) {
+			attachmentManager.uploadAttachments((MultipartFile[]) noteRequest.getAttachments().stream().map(AttachmentRequest::getFile).toArray());
 		}
 		
 		Note savedEntity = noteRepository.save(note);
