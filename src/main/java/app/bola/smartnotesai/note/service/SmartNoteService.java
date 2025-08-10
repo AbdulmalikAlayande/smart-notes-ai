@@ -5,7 +5,7 @@ import app.bola.smartnotesai.ai.service.NoteSummarizer;
 import app.bola.smartnotesai.ai.service.TagGenerator;
 import app.bola.smartnotesai.common.exception.InvalidRequestException;
 import app.bola.smartnotesai.note.data.model.Attachment;
-import app.bola.smartnotesai.user.data.model.User;
+import app.bola.smartnotesai.user.data.model.SmartNotesUser;
 import app.bola.smartnotesai.user.data.repository.UserRepository;
 import app.bola.smartnotesai.folder.data.model.Folder;
 import app.bola.smartnotesai.folder.data.repository.FolderRepository;
@@ -41,7 +41,7 @@ public class SmartNoteService implements NoteService {
 	@Override
 	public NoteResponse create(NoteRequest noteRequest) {
 		Note note = mapper.map(noteRequest, Note.class);
-		User owner = userRepository.findByPublicId(noteRequest.getOwnerId())
+		SmartNotesUser owner = userRepository.findByPublicId(noteRequest.getOwnerId())
 				                   .orElseThrow(() -> new EntityNotFoundException("User not found"));
 		
 		note.setOwner(owner);
@@ -143,7 +143,7 @@ public class SmartNoteService implements NoteService {
 	@Override
 	public Set<NoteResponse> findAllByOwnerId(String ownerId) {
 			try {
-				User owner = userRepository.findByPublicId(ownerId)
+				SmartNotesUser owner = userRepository.findByPublicId(ownerId)
 						             .orElseThrow(() -> new EntityNotFoundException("User not found"));
 				List<Note> notes = noteRepository.findAllByOwner(owner);
 				return toResponse(notes);

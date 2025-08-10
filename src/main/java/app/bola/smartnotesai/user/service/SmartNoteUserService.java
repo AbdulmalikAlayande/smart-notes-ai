@@ -3,7 +3,7 @@ package app.bola.smartnotesai.user.service;
 import app.bola.smartnotesai.security.services.AuthService;
 import app.bola.smartnotesai.user.data.dto.UserRequest;
 import app.bola.smartnotesai.user.data.dto.UserResponse;
-import app.bola.smartnotesai.user.data.model.User;
+import app.bola.smartnotesai.user.data.model.SmartNotesUser;
 import app.bola.smartnotesai.user.data.repository.UserRepository;
 import app.bola.smartnotesai.folder.data.model.Folder;
 import app.bola.smartnotesai.folder.data.repository.FolderRepository;
@@ -29,7 +29,7 @@ public class SmartNoteUserService implements UserService{
 	
 	@Override
 	public void delete(String publicId) {
-		User user = userRepository.findByPublicId(publicId)
+		SmartNotesUser user = userRepository.findByPublicId(publicId)
 				            .orElseThrow(() -> new EntityNotFoundException("User not found"));
 		
 		List<Note> notes = noteRepository.findByOwner(user);

@@ -9,9 +9,9 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>app.bola</groupId>
-    <artifactId>smart-notes-ai</artifactId>
+    <artifactId>smartnotesai</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>smart-notes-ai</name>
+    <name>smartnotesai</name>
     <description>A smart note management application and more</description>
     <url/>
     <licenses>

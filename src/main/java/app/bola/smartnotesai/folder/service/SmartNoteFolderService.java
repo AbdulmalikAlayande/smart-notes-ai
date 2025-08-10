@@ -2,7 +2,7 @@ package app.bola.smartnotesai.folder.service;
 
 import app.bola.smartnotesai.folder.data.dto.FolderUpdateRequest;
 import app.bola.smartnotesai.note.data.repository.NoteRepository;
-import app.bola.smartnotesai.user.data.model.User;
+import app.bola.smartnotesai.user.data.model.SmartNotesUser;
 import app.bola.smartnotesai.user.data.repository.UserRepository;
 import app.bola.smartnotesai.folder.data.dto.FolderRequest;
 import app.bola.smartnotesai.folder.data.dto.FolderResponse;
@@ -36,7 +36,7 @@ public class SmartNoteFolderService implements FolderService {
 		Folder folder = mapper.map(request, Folder.class);
 		
 		String folderOwnerNotFound = "Folder owner with Id %s does not exist".formatted(request.getOwnerId());
-		User owner = userRepository.findByPublicId(request.getOwnerId())
+		SmartNotesUser owner = userRepository.findByPublicId(request.getOwnerId())
 				             .orElseThrow(() -> new EntityNotFoundException(folderOwnerNotFound));
 		
 		if (request.getParentId() != null && !request.getParentId().isEmpty()) {
@@ -122,7 +122,7 @@ public class SmartNoteFolderService implements FolderService {
 	}
 	
 	public Set<FolderResponse> findByOwner(String ownerId) {
-		User owner = userRepository.findByPublicId(ownerId)
+		SmartNotesUser owner = userRepository.findByPublicId(ownerId)
 				             .orElseThrow(() -> new EntityNotFoundException("User not found"));
 		
 		List<Folder> folders = folderRepository.findByOwner(owner);

@@ -1,6 +1,6 @@
 package app.bola.smartnotesai.user.data.dto;
 
-import app.bola.smartnotesai.user.data.model.User;
+import app.bola.smartnotesai.user.data.model.SmartNotesUser;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -9,7 +9,7 @@ import lombok.experimental.SuperBuilder;
 import java.io.Serializable;
 
 /**
- * {@link User} Model Request Object
+ * {@link SmartNotesUser} Model Request Object
  */
 
 @Getter

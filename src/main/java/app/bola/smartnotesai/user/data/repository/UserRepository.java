@@ -1,13 +1,13 @@
 package app.bola.smartnotesai.user.data.repository;
 
-import app.bola.smartnotesai.user.data.model.User;
+import app.bola.smartnotesai.user.data.model.SmartNotesUser;
 import app.bola.smartnotesai.common.data.repository.BaseRepository;
 
 import java.util.Optional;
 
-public interface UserRepository extends BaseRepository<User> {
+public interface UserRepository extends BaseRepository<SmartNotesUser> {
 	
-	Optional<User> findByEmail(String email);
+	Optional<SmartNotesUser> findByEmail(String email);
 	
-	Optional<User> findByUsername(String username);
+	Optional<SmartNotesUser> findByUsername(String username);
 }

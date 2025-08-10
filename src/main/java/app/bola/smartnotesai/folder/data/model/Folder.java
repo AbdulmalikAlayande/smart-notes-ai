@@ -1,6 +1,6 @@
 package app.bola.smartnotesai.folder.data.model;
 
-import app.bola.smartnotesai.user.data.model.User;
+import app.bola.smartnotesai.user.data.model.SmartNotesUser;
 import app.bola.smartnotesai.common.data.model.BaseModel;
 import app.bola.smartnotesai.note.data.model.Note;
 import jakarta.persistence.*;
@@ -21,7 +21,7 @@ public class Folder extends BaseModel {
     
     @ManyToOne
     @JoinColumn(nullable = false)
-    private User owner;
+    private SmartNotesUser owner;
     
     @ManyToOne
     private Folder parent;

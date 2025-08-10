@@ -1,6 +1,6 @@
 package app.bola.smartnotesai.note.data.model;
 
-import app.bola.smartnotesai.user.data.model.User;
+import app.bola.smartnotesai.user.data.model.SmartNotesUser;
 import app.bola.smartnotesai.common.data.model.BaseModel;
 import app.bola.smartnotesai.folder.data.model.Folder;
 import jakarta.persistence.*;
@@ -30,7 +30,7 @@ public class Note extends BaseModel {
     private String summary;
     
     @ManyToOne
-    private User owner;
+    private SmartNotesUser owner;
     
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<Attachment> attachments;

@@ -8,7 +8,7 @@ import app.bola.smartnotesai.security.provider.JwtAuthenticationProvider;
 import app.bola.smartnotesai.user.data.dto.UserRequest;
 import app.bola.smartnotesai.user.data.dto.UserResponse;
 import app.bola.smartnotesai.user.data.model.Role;
-import app.bola.smartnotesai.user.data.model.User;
+import app.bola.smartnotesai.user.data.model.SmartNotesUser;
 import app.bola.smartnotesai.user.data.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -37,13 +37,13 @@ public class SmartNoteAuthService implements AuthService {
 
     @Override
     public UserResponse create(UserRequest userRequest) {
-        User user = modelMapper.map(userRequest, User.class);
+        SmartNotesUser user = modelMapper.map(userRequest, SmartNotesUser.class);
 
         String hashedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);
 
         user.setRole(Role.USER);
-        User savedEntity = userRepository.save(user);
+        SmartNotesUser savedEntity = userRepository.save(user);
 
         // Create a default welcome note with "Hi Junie" content
         NoteRequest welcomeNote = new NoteRequest();

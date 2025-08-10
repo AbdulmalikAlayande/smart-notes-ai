@@ -1,6 +1,6 @@
 package app.bola.smartnotesai.security.services;
 
-import app.bola.smartnotesai.user.data.model.User;
+import app.bola.smartnotesai.user.data.model.SmartNotesUser;
 import app.bola.smartnotesai.user.data.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
@@ -20,7 +20,7 @@ public class SmartNoteUserDetailsService implements UserDetailsService {
 	
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = userRepository.findByUsername(username)
+		SmartNotesUser user = userRepository.findByUsername(username)
 				            .orElseThrow(() -> new EntityNotFoundException("User not found"));
 		
 		return new org.springframework.security.core.userdetails.User(

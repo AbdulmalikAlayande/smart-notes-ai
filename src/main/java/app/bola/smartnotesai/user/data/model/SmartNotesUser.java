@@ -17,7 +17,7 @@ import java.util.StringJoiner;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")
-public class User extends BaseModel {
+public class SmartNotesUser extends BaseModel {
 
     @Column(unique = true, nullable = false)
     private String email;
@@ -37,7 +37,7 @@ public class User extends BaseModel {
     
     @Override
     public String toString() {
-        return new StringJoiner(", ", User.class.getSimpleName() + "[", "]")
+        return new StringJoiner(", ", SmartNotesUser.class.getSimpleName() + "[", "]")
                        .add("id: " + getId())
                        .add("publicId: " + getPublicId())
                        .add("email: " + email)
