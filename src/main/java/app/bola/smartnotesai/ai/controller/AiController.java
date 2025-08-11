@@ -29,16 +29,18 @@ public class AiController {
 
     @Operation(
         summary = "Generate a summary for a note",
-        description = "Uses AI to summarize the provided note content."
+        description = "Uses AI to summarize the provided note content. Useful for quickly understanding long notes or extracting key points.",
+        tags = {"AI", "Notes"}
     )
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Summary generated successfully"),
-        @ApiResponse(responseCode = "400", description = "Invalid request body")
+        @ApiResponse(responseCode = "200", description = "Summary generated successfully. Returns a concise summary of the note."),
+        @ApiResponse(responseCode = "400", description = "Invalid request body. Ensure 'content' is provided.")
     })
+    @Parameter(name = "Authorization", description = "Bearer token for authentication", required = true)
     @SecurityRequirement(name = "Bearer Authentication")
     @PostMapping("/generate-summary")
     public ResponseEntity<NoteSummarizerResponse> summarize(
-        @Parameter(description = "Request body containing note content", required = true)
+        @Parameter(description = "Request body containing note content. Example: { 'content': 'your note text' }", required = true)
         @RequestBody Map<String, String> request) {
         String noteContent = request.get("content");
         NoteSummarizerResponse summary = noteSummarizer.generateSummary(noteContent);
@@ -47,16 +49,18 @@ public class AiController {
 
     @Operation(
         summary = "Generate tags for a note",
-        description = "Uses AI to generate relevant tags for the provided note content."
+        description = "Uses AI to generate relevant tags for the provided note content. Helps with organization and search.",
+        tags = {"AI", "Notes", "Tags"}
     )
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Tags generated successfully"),
-        @ApiResponse(responseCode = "400", description = "Invalid request body")
+        @ApiResponse(responseCode = "200", description = "Tags generated successfully. Returns a list of suggested tags."),
+        @ApiResponse(responseCode = "400", description = "Invalid request body. Ensure 'content' is provided.")
     })
+    @Parameter(name = "Authorization", description = "Bearer token for authentication", required = true)
     @SecurityRequirement(name = "Bearer Authentication")
     @PostMapping("/generate-tags")
     public ResponseEntity<TagGeneratorResponse> generateTags(
-        @Parameter(description = "Request body containing note content", required = true)
+        @Parameter(description = "Request body containing note content. Example: { 'content': 'your note text' }", required = true)
         @RequestBody Map<String, String> request) {
         String noteContent = request.get("content");
         var tags = tagGenerator.generateTags(noteContent);

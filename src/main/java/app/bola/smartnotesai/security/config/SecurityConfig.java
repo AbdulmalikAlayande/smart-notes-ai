@@ -37,7 +37,9 @@ public class SecurityConfig {
 			       .headers(headers -> headers
                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::deny)
                        .xssProtection(HeadersConfigurer.XXssConfig::disable)
-                       .contentSecurityPolicy(customizer -> customizer.policyDirectives("default-src 'self';"))
+                       .contentSecurityPolicy(customizer -> customizer
+							.policyDirectives("default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; img-src 'self' data:; font-src 'self' data:; frame-ancestors 'none'")
+                       )
 			       )
 			       .authorizeHttpRequests(auth -> auth
                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()

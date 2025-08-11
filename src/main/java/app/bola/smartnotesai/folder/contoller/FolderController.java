@@ -28,37 +28,49 @@ public class FolderController implements BaseController<FolderRequest, FolderRes
 	
 	@Override
 	@SecurityRequirement(name = "Bearer Authentication")
-	@Operation(summary = "Create a new folder", description = "Creates a new folder for organizing notes.")
+	@Operation(
+		summary = "Create a new folder",
+		description = "Creates a new folder for organizing notes. Use this to keep your notes structured.",
+		tags = {"Folder", "Create"}
+	)
 	@ApiResponses({
-		@ApiResponse(responseCode = "200", description = "Folder created successfully"),
-		@ApiResponse(responseCode = "400", description = "Invalid folder data")
+		@ApiResponse(responseCode = "200", description = "Folder created successfully. Returns the created folder details."),
+		@ApiResponse(responseCode = "400", description = "Invalid folder data. Check required fields.")
 	})
 	public ResponseEntity<FolderResponse> create(
-		@Parameter(description = "Folder creation request body", required = true)
+		@Parameter(description = "Folder creation request body. Example: { 'name': 'Work', ... }", required = true)
 		@RequestBody FolderRequest folderRequest) {
 		FolderResponse response = folderService.create(folderRequest);
 		return ResponseEntity.ok(response);
 	}
 	
 	@SecurityRequirement(name = "Bearer Authentication")
-	@Operation(summary = "Update folder", description = "Updates folder details.")
+	@Operation(
+		summary = "Update folder",
+		description = "Updates folder details. Use this to rename or reorganize folders.",
+		tags = {"Folder", "Update"}
+	)
 	@ApiResponses({
-		@ApiResponse(responseCode = "200", description = "Folder updated successfully"),
-		@ApiResponse(responseCode = "400", description = "Invalid update data")
+		@ApiResponse(responseCode = "200", description = "Folder updated successfully. Returns updated folder details."),
+		@ApiResponse(responseCode = "400", description = "Invalid update data.")
 	})
 	@Override
 	public <T> ResponseEntity<?> update(
-		@Parameter(description = "Folder update request body", required = true)
+		@Parameter(description = "Folder update request body. Example: { 'name': 'Personal', ... }", required = true)
 		@RequestBody T noteRequest) {
 		NoteRequest request = objectMapper.convertValue(noteRequest, NoteRequest.class);
 		return ResponseEntity.ok(folderService.update(request));
 	}
 	
 	@SecurityRequirement(name = "Bearer Authentication")
-	@Operation(summary = "Find folder by public ID", description = "Retrieves folder details by its public identifier.")
+	@Operation(
+		summary = "Find folder by public ID",
+		description = "Retrieves folder details by its public identifier. Useful for direct access to a specific folder.",
+		tags = {"Folder", "Read"}
+	)
 	@ApiResponses({
-		@ApiResponse(responseCode = "200", description = "Folder found"),
-		@ApiResponse(responseCode = "404", description = "Folder not found")
+		@ApiResponse(responseCode = "200", description = "Folder found. Returns folder details."),
+		@ApiResponse(responseCode = "404", description = "Folder not found.")
 	})
 	@Override
 	public ResponseEntity<FolderResponse> findByPublicId(
@@ -69,10 +81,14 @@ public class FolderController implements BaseController<FolderRequest, FolderRes
 	}
 	
 	@SecurityRequirement(name = "Bearer Authentication")
-	@Operation(summary = "Delete folder", description = "Deletes a folder by its public identifier.")
+	@Operation(
+		summary = "Delete folder",
+		description = "Deletes a folder by its public identifier. Use with caution!",
+		tags = {"Folder", "Delete"}
+	)
 	@ApiResponses({
-		@ApiResponse(responseCode = "204", description = "Folder deleted successfully"),
-		@ApiResponse(responseCode = "404", description = "Folder not found")
+		@ApiResponse(responseCode = "204", description = "Folder deleted successfully."),
+		@ApiResponse(responseCode = "404", description = "Folder not found.")
 	})
 	@Override
 	public ResponseEntity<?> delete(
@@ -83,9 +99,13 @@ public class FolderController implements BaseController<FolderRequest, FolderRes
 	}
 	
 	@SecurityRequirement(name = "Bearer Authentication")
-	@Operation(summary = "Find all folders", description = "Retrieves all folders.")
+	@Operation(
+		summary = "Find all folders",
+		description = "Retrieves all folders. Useful for dashboards and bulk operations.",
+		tags = {"Folder", "Read"}
+	)
 	@ApiResponses({
-		@ApiResponse(responseCode = "200", description = "Folders retrieved successfully")
+		@ApiResponse(responseCode = "200", description = "Folders retrieved successfully. Returns a list of folders.")
 	})
 	@Override
 	public ResponseEntity<Collection<FolderResponse>> findAll() {
@@ -94,10 +114,14 @@ public class FolderController implements BaseController<FolderRequest, FolderRes
 	}
 	
 	@SecurityRequirement(name = "Bearer Authentication")
-	@Operation(summary = "Find folders by owner", description = "Retrieves all folders belonging to a specific owner.")
+	@Operation(
+		summary = "Find folders by owner",
+		description = "Retrieves all folders belonging to a specific owner.",
+		tags = {"Folder", "Read"}
+	)
 	@ApiResponses({
-		@ApiResponse(responseCode = "200", description = "Folders retrieved successfully"),
-		@ApiResponse(responseCode = "404", description = "Owner not found")
+		@ApiResponse(responseCode = "200", description = "Folders retrieved successfully. Returns a list of folders."),
+		@ApiResponse(responseCode = "404", description = "Owner not found.")
 	})
 	@GetMapping("owner/{owner-id}/")
 	public ResponseEntity<Set<FolderResponse>> findByOwner(
