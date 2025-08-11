@@ -6,12 +6,18 @@ import app.bola.smartnotesai.security.services.AuthService;
 import app.bola.smartnotesai.common.controller.BaseController;
 import app.bola.smartnotesai.user.data.dto.UserUpdateRequest;
 import app.bola.smartnotesai.user.service.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import java.util.Collection;
 
@@ -24,30 +30,66 @@ public class UserController implements BaseController<UserRequest, UserResponse>
 	final AuthService authService;
 	final UserService userService;
 	
+	@Operation(summary = "Create a new user", description = "Registers a new user.")
+	@ApiResponses({
+		@ApiResponse(responseCode = "201", description = "User created successfully"),
+		@ApiResponse(responseCode = "400", description = "Invalid user data")
+	})
 	@Override
-	public ResponseEntity<UserResponse> create(@RequestBody UserRequest userRequest) {
+	public ResponseEntity<UserResponse> create(
+		@Parameter(description = "User creation request body", required = true)
+		@RequestBody UserRequest userRequest) {
 		UserResponse response = authService.create(userRequest);
 		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 	
+	@SecurityRequirement(name = "Bearer Authentication")
+	@Operation(summary = "Update user", description = "Updates user details.")
+	@ApiResponses({
+		@ApiResponse(responseCode = "200", description = "User updated successfully"),
+		@ApiResponse(responseCode = "400", description = "Invalid update data")
+	})
 	@Override
-	public <T> ResponseEntity<?> update(T noteRequest) {
+	public <T> ResponseEntity<?> update(
+		@Parameter(description = "User update request body", required = true)
+		@RequestBody T noteRequest) {
 		UserUpdateRequest request = (UserUpdateRequest) noteRequest;
 		return ResponseEntity.ok(userService.update(request));
 	}
 	
+	@SecurityRequirement(name = "Bearer Authentication")
+	@Operation(summary = "Find user by public ID", description = "Retrieves user details by their public identifier.")
+	@ApiResponses({
+		@ApiResponse(responseCode = "302", description = "User found"),
+		@ApiResponse(responseCode = "404", description = "User not found")
+	})
 	@Override
-	public ResponseEntity<UserResponse> findByPublicId(String publicId) {
+	public ResponseEntity<UserResponse> findByPublicId(
+		@Parameter(description = "User public ID", required = true)
+		String publicId) {
 		UserResponse response = userService.findByPublicId(publicId);
 		return ResponseEntity.status(HttpStatus.FOUND).body(response);
 	}
 	
+	@SecurityRequirement(name = "Bearer Authentication")
+	@Operation(summary = "Delete user", description = "Deletes a user by their public identifier.")
+	@ApiResponses({
+		@ApiResponse(responseCode = "204", description = "User deleted successfully"),
+		@ApiResponse(responseCode = "404", description = "User not found")
+	})
 	@Override
-	public ResponseEntity<?> delete(String publicId) {
+	public ResponseEntity<?> delete(
+		@Parameter(description = "User public ID", required = true)
+		String publicId) {
 		userService.delete(publicId);
 		return ResponseEntity.noContent().build();
 	}
 	
+	@SecurityRequirement(name = "Bearer Authentication")
+	@Operation(summary = "Find all users", description = "Retrieves all users.")
+	@ApiResponses({
+		@ApiResponse(responseCode = "302", description = "Users retrieved successfully")
+	})
 	@Override
 	public ResponseEntity<Collection<UserResponse>> findAll() {
 		Collection<UserResponse> response = userService.findAll();
