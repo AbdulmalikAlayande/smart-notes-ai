@@ -20,7 +20,6 @@ public interface FileStorageService {
 		}
 		
 		String originalFilename = file.getOriginalFilename();
-		
 		if (originalFilename == null || originalFilename.trim().isEmpty()) {
 			throw new RuntimeException("File must have a valid name");
 		}
